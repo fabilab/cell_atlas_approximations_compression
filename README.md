@@ -1,4 +1,4 @@
-<img src="https://raw.githubusercontent.com/fabilab/cell_atlas_approximations/main/figures/figure_Approximation.png" width="150" height="150">
+<img src="https://raw.githubusercontent.com/fabilab/cell_atlas_approximations/main/figures/figure_Approximation.png" width="150">
 
 # Cell Atlas Approximations - Compression
 Cell atlases such as Tabula Muris and Tabula Sapiens are multi-organ single cell omics data sets describing entire organisms. A cell atlas approximation is a lossy and lightweight compression of a cell atlas that can be streamed via the internet.
@@ -28,6 +28,7 @@ To answer these questions, we construct approximations from all kinds of cell at
 | schmidtea mediterraea | whole organism | https://www.science.org/doi/10.1126/science.aaq1736 |
 | schistosoma mansoni | whole organism | https://www.nature.com/articles/s41467-020-20794-w |
 | spongilla lacustris | whole organism | https://www.science.org/doi/10.1126/science.abj2949 |
+| stylophora pistillata | whole organism | https://www.sciencedirect.com/science/article/pii/S0092867421004402 |
 | amphimedon queenslandica | whole organism | https://www.nature.com/articles/s41559-018-0575-6 |
 | mnemiopsis leidy | whole organism | https://www.nature.com/articles/s41559-018-0575-6 |
 | trichoplax adhaerens | whole organism | https://www.nature.com/articles/s41559-018-0575-6 |

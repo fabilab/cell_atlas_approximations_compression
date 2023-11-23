@@ -21,6 +21,7 @@ from .preprocess import (
     filter_cells,
     normalise_counts,
     correct_annotations,
+    postprocess_feature_names,
 )
 from .compress import (
     compress_tissue,

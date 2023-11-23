@@ -1,0 +1,87 @@
+measurement_types: ["gene_expression"]
+
+gene_expression:
+  path: "c_hemisphaerica.h5ad"
+  normalisation: raw
+  tissues: ["whole"]
+  cell_annotations:
+    column: "annosSub"
+    rename_dict:
+      cell_types:
+        'exumbrella epidermis': 'exumbrellar'
+        'i-cells': 'i'
+        'medium oocytes': 'oocyte'
+        'gastrodigestive-a': 'digestive'
+        'manubrium epidermis': 'manubrium'
+        'neural cells early stages': 'neural'
+        'early nematoblasts': 'nematoblast'
+        'gastrodigestive-b': 'digestive'
+        'striated muscle of subumbrella': 'subumbrellar striated muscle'
+        'terminal differentiating nematocytes': 'nematocyte'
+        'neural cells-a (incl. glwa, mih cells)': 'neural'
+        'nematocyte precursors': 'nematocyte precursor'
+        'gastrodigestive-c': 'digestive'
+        'differentiating nematocytes': 'nematocyte'
+        'gastrodigestive-d': 'digestive'
+        'tentacle bulb distal gastroderm': 'tentacle gastrodermal'
+        'late nematoblasts': 'nematoblast'
+        'radial smooth muscles': 'smooth muscle'
+        'small oocytes': 'oocyte'
+        'mid nematoblasts': 'nematoblast'
+        'mature nematocytes': 'nematocyte'
+        'gastrodigestive-e': 'digestive'
+        'gastrodigestive-f': 'digestive'
+        'gland cells-a': 'gland'
+        'gland cells-b': 'gland'
+        'gonad epidermis': 'gonad'
+        'tentacle epidermis': 'tentacle epidermal'
+        'gland cells-c': 'gland'
+        'neural cells-b (incl. rfamide cells)': 'neural'
+        'tentacle gfp cells': 'bioluminescent'
+        'endodermal plate': 'endodermal'
+        'striated muscle of velum': 'velum striated muscle'
+        'gland cells-d': 'gland'
+        'gland cells-e': 'gland'
+        'neural cells-c (incl. yfamide cells)': 'neural'
+        'very early oocytes': 'oocyte'
+
+cell_annotations:
+  blacklist:
+    whole: [
+    ]
+
+  cell_supertypes:
+    'immune': [
+    ]
+
+    'epithelial': [
+      'exumbrellar',
+      'manubrium',
+      'digestive',
+      'gonad',
+      'tentacle epidermal',
+    ]
+    'endothelial': [
+      'endodermal',
+      'tentacle gastrodermal',
+    ]
+    'mesenchymal': [
+      'subumbrellar striated muscle',
+      'velum striated muscle',
+      'smooth muscle',
+      'gland',
+    ]
+
+    'other': [
+      'i',
+      'neural',
+      'oocyte',
+      'nematocyte precursor',
+      'nematocyte',
+      'nematoblast',
+      'bioluminescent',
+    ]
+
+  supertype_order: [
+    'immune', 'epithelial', 'endothelial', 'mesenchymal', 'other',
+  ]

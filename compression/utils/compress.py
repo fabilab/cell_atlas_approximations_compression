@@ -208,6 +208,7 @@ def compress_tissue(
         celltype_order,
     )
 
+    print('Compress at the cell type level')
     features = adata_tissue.var_names
     avg = pd.DataFrame(
             np.zeros((len(features), len(celltypes)), np.float32),
@@ -236,12 +237,12 @@ def compress_tissue(
             frac[celltype] = np.asarray((Xidx > 0).mean(axis=0))[0]
 
     # Local neighborhoods
+    print('Compress at the cell state level')
     neid = _compress_neighborhoods(
         ncells,
         adata_tissue,
         measurement_type=measurement_type,
     )
-
 
     result = {
         'features': features,
@@ -273,22 +274,9 @@ def _compress_neighborhoods(
     features = adata.var_names
 
     celltypes = list(ncells.keys())
-    nei_avg = pd.DataFrame(
-            np.zeros((len(features), len(celltypes) * avg_neighborhoods), np.float32),
-            index=features,
-            )
-    nei_coords = pd.DataFrame(
-            np.zeros((2, len(celltypes) * avg_neighborhoods), np.float32),
-            index=['x', 'y'],
-            )
-    convex_hulls = []
-    if measurement_type == "gene_expression":
-        nei_frac = pd.DataFrame(
-                np.zeros((len(features), len(celltypes) * avg_neighborhoods), np.float32),
-                index=features,
-                )
 
     # Subsample with some regard for cell typing
+    print('   Subsampling for cell state compression')
     cell_ids = []
     for celltype, ncell in ncells.items():
         cell_ids_ct = adata.obs_names[adata.obs['cellType'] == celltype]
@@ -297,6 +285,8 @@ def _compress_neighborhoods(
             cell_ids_ct = cell_ids_ct[idx_rand]
         cell_ids.extend(list(cell_ids_ct))
     adata = adata[cell_ids].copy()
+    nsub = len(cell_ids)
+    print(f'   Subsampling done: {nsub} cells')
 
     ##############################################
     # USE AN EXISTING EMBEDDING OR MAKE A NEW ONE
@@ -345,7 +335,11 @@ def _compress_neighborhoods(
         tmp = adata.obs[['cellType']].copy()
         tmp['kmeans'] = labels
         tmp['c'] = 1.0
-        ncells_per_label = tmp.groupby(['kmeans', 'cellType']).size().unstack(fill_value=0)
+        ncells_per_label = (
+                tmp.groupby(['kmeans', 'cellType'])
+                   .size()
+                   .unstack(fill_value=0)
+                   .loc[:, celltypes])
         del tmp
 
         if ncells_per_label.sum(axis=1).min() >= 3:
@@ -353,6 +347,21 @@ def _compress_neighborhoods(
     else:
         raise ValueError("Cannot cluster neighborhoods")
 
+    n_neis = kmeans.n_clusters
+    nei_avg = pd.DataFrame(
+            np.zeros((len(features), n_neis), np.float32),
+            index=features,
+            )
+    nei_coords = pd.DataFrame(
+            np.zeros((2, n_neis), np.float32),
+            index=['x', 'y'],
+            )
+    convex_hulls = []
+    if measurement_type == "gene_expression":
+        nei_frac = pd.DataFrame(
+                np.zeros((len(features), n_neis), np.float32),
+                index=features,
+                )
     for i in range(kmeans.n_clusters):
         idx = kmeans.labels_ == i
 
@@ -374,12 +383,9 @@ def _compress_neighborhoods(
     del adata
     gc.collect()
 
-    nei_avg = nei_avg.iloc[:, :len(ncells_per_label)]
-    nei_coords = nei_coords.iloc[:, :len(ncells_per_label)]
     nei_avg.columns = ncells_per_label.index
     nei_coords.columns = ncells_per_label.index
     if measurement_type == "gene_expression":
-        nei_frac = nei_frac.iloc[:, :len(ncells_per_label)]
         nei_frac.columns = ncells_per_label.index
 
     neid = {

@@ -1,6 +1,26 @@
 import gc
 import numpy as np
+import pandas as pd
 import scanpy as sc
+
+
+def postprocess_feature_names(adata, config_mt):
+    """Postprocess the names of features, e.g. to match standard names on GenBank."""
+    if "feature_name_postprocess" not in config_mt:
+        return adata
+
+    if "remove_prefixes" in config_mt["feature_name_postprocess"]:
+        prefixes = config_mt["feature_name_postprocess"]["remove_prefixes"]
+        if isinstance(prefixes, str):
+            prefixes = [prefixes]
+        for prefix in prefixes:
+            adata.var_names = adata.var_names.str.lstrip(prefix)
+
+    if "substitute_final_uderscore" in config_mt["feature_name_postprocess"]:
+        sub = config_mt["feature_name_postprocess"]["substitute_final_uderscore"]
+        adata.var_names = adata.var_names.str.replace('_([^_]+)$', r'.\1', regex=True)
+
+    return adata
 
 
 def filter_cells(adata, config_mt):

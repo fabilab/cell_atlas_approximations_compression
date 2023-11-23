@@ -47,7 +47,7 @@ cell_annotations:
       "gabaergic neuron": "neuron"
       "endothelial cell": "capillary"
       "rod photoreceptor": "rod"
-      "at2 cell": "AT2 epi"
+      "at2 cell": "AT2"
       "cumulus cell": "cumulus"
       "stomach pit cell": "pit"
       "stomach parietal cell": "parietal"
@@ -115,7 +115,7 @@ cell_annotations:
       'leukocyte',
       'myeloid cell',
       'cumulus',
-      'AT2 epi',
+      'at2 cell',
       'cardiomyocyte',
       'oligodendrocyte',
       'radial glia',
@@ -124,6 +124,11 @@ cell_annotations:
       'leukocyte',
       'myeloid cell',
       'testis unknown cell',
+      'hepatocyte',
+      "spermatogonia",
+      "spermatocyte",
+      'at2 cell',
+      'radial glia',
     ]
     oviduct: [
       'leukocyte',
@@ -202,7 +207,7 @@ cell_annotations:
       'enterocyte',
       "proximal tubule epi",
       'intercalated',
-      "AT2 epi",
+      "AT2",
       "ductal",
       "acinar",
       "melanocyte",

@@ -66,6 +66,9 @@ def collect_feature_sequences(config_mt, features, measurement_type, species):
             if gene == '':
                 continue
 
+            if ' ' in gene:
+                gene = gene.split()[0]
+
             if gene in seqs:
                 seqs[gene] = seq
 

@@ -247,7 +247,7 @@ cell_annotations:
       'memory b cell': 'B'
       'naive b cell': 'B'
       'myeloid progenitor': 'myeloid'
-      'plasmablast': 'plasma cell'
+      'plasmablast': 'plasma'
       'enterocyte of epithelium of large intestine': 'enterocyte'
       'immature enterocyte': 'enterocyte'
       'paneth cell of epithelium of large intestine': 'paneth'
@@ -441,7 +441,7 @@ cell_annotations:
       'fibroblast (gastrointestinal)': 'fibroblast'
       'smooth muscle (colon) 2': 'smooth muscle'
       'colonic goblet cell': 'goblet'
-      'plasma cell': 'plasma cell'
+      'plasma cell': 'plasma'
       'small intestinal goblet cell': 'goblet'
       'colon epithelial cell 2': 'epithelial'
       'colon epithelial cell 3': 'epithelial'
@@ -641,7 +641,7 @@ cell_annotations:
       'erythroid',
       'erythrocyte',
       'B',
-      'plasma cell',
+      'plasma',
       'thymocyte',
       'T',
       'NK',

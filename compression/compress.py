@@ -20,6 +20,7 @@ from utils import (
     load_config,
     root_repo_folder,
     output_folder,
+    postprocess_feature_names,
     filter_cells,
     normalise_counts,
     correct_annotations,
@@ -34,26 +35,28 @@ from utils import (
 if __name__ == '__main__':
 
     species_list = [
-            ## Multi-organ species
-            #'x_laevis',
-            #'h_sapiens',
-            #'m_musculus',
-            #'m_murinus',
-            #'d_melanogaster',
+        # Multi-organ species
+        #'h_sapiens',
+        #'m_musculus',
+        #'m_murinus',
+        #'d_melanogaster',
+        #'x_laevis',
 
-        # Single-organ species
-        'a_queenslandica',
-        'c_elegans',
-        'd_rerio',
-        'h_miamia',
-        'i_pulchra',
-        'l_minuta',
-        'm_leidyi',
-        'n_vectensis',
-        's_mansoni',
-        's_mediterranea',
-        's_lacustris',
-        't_adhaerens',
+        ## Single-organ species
+        #'c_hemisphaerica',
+        's_pistillata',
+        #'a_queenslandica',
+        #'c_elegans',
+        #'d_rerio',
+        #'h_miamia',
+        #'i_pulchra',
+        #'l_minuta',
+        #'m_leidyi',
+        #'n_vectensis',
+        #'s_mansoni',
+        #'s_mediterranea',
+        #'s_lacustris',
+        #'t_adhaerens',
     ]
 
     for species in species_list:
@@ -65,9 +68,11 @@ if __name__ == '__main__':
         atlas_data_folder = root_repo_folder / 'data' / 'full_atlases' / 'RNA' / species
         fn_out = output_folder / f'{species}.h5'
 
-        # Remove existing compressed atlas file if present
-        if os.path.isfile(fn_out):
-            os.remove(fn_out)
+        # Remove existing compressed atlas file if present, but only do it at the end
+        remove_old = os.path.isfile(fn_out)
+        if remove_old:
+            fn_out_final = fn_out
+            fn_out = pathlib.Path(str(fn_out_final)+'.new')
 
         # Iterate over gene expression, chromatin accessibility, etc.
         for measurement_type in config["measurement_types"]:
@@ -161,6 +166,9 @@ if __name__ == '__main__':
                     
                     if "path_metadata_global" in config_mt:
                         adata_tissue.obs = meta_tissue.copy()
+
+                    print("Postprocess feature names")
+                    adata_tissue = postprocess_feature_names(adata_tissue, config_mt)
 
                     print("Filter cells")
                     adata_tissue = filter_cells(adata_tissue, config_mt)
@@ -264,3 +272,8 @@ if __name__ == '__main__':
 
             print('Garbage collection at the end of a species and measurement type')
             gc.collect()
+
+        if remove_old:
+            print('Delete old file and rename new file to final filename')
+            os.remove(fn_out_final)
+            os.rename(fn_out, fn_out_final)

@@ -1,0 +1,89 @@
+measurement_types: ["gene_expression"]
+
+gene_expression:
+  path: "s_pistillata.h5ad"
+  normalisation: raw
+  feature_sequences:
+    path: "genome_and_annotations_GCF_002571385.2/ncbi_dataset/data/GCF_002571385.2/protein.faa.gz"
+    type: "protein"
+
+  feature_name_postprocess:
+    "remove_prefixes": ["Spis_"]
+    "substitute_final_uderscore": "dot"
+
+  tissues: ["whole"]
+  cell_annotations:
+    column: "cell_type"
+    rename_dict:
+      cell_types:
+        'gastrodermis': 'gastrodermal'
+        'neuron_3': 'neuron'
+        'epidermis_1': 'epidermal'
+        'alga-hosting_cells': 'alga-hosting'
+        'epidermis_2': 'epidermal'
+        'mitotic_host_cells': 'proliferating'
+        'digestive_filaments': 'filamentous'
+        'neuron_1': 'neuron'
+        'neuron_4': 'neuron'
+        'neuron_5': 'neuron'
+        'gland_7': 'gland'
+        'gland_10': 'gland'
+        'gastrodermis_musclelike': 'muscle-like'
+        'gland_8': 'gland'
+        'gland_1': 'gland'
+        'gland_4': 'gland'
+        'neuron_8': 'gland'
+        'neuron_11': 'gland'
+        'immune_1': 'immune'
+        'neuron_6': 'neuron'
+        'neuron_2': 'neuron'
+        'immune_2': 'immune'
+        'neuron_9': 'neuron'
+        'gland_6': 'gland'
+        'gland_3_digestive': 'digestive'
+        'gland_9': 'gland'
+        'neuron_14': 'neuron'
+        'neuron_7': 'neuron'
+        'gland_5': 'gland'
+        'neuron_12': 'neuron'
+        'gland_2': 'gland'
+        'germline_sperm': 'sperm'
+        'neuron_10': 'neuron'
+        'neuron_13': 'neuron'
+
+
+cell_annotations:
+  blacklist:
+    whole: [
+      'unknown',
+    ]
+
+  cell_supertypes:
+    'immune': [
+      'immune'
+    ]
+
+    'epithelial': [
+      'epidermal',
+      'gastrodermal',
+      'digestive',
+      'filamentous',
+    ]
+
+    'mesenchymal': [
+      'calicoblast',
+      'gland',
+      'muscle-like',
+    ]
+
+    'other': [
+      'neuron',
+      'cnidocyte',
+      'sperm',
+      'alga-hosting',
+      'proliferating',
+    ]
+
+  supertype_order: [
+    'immune', 'epithelial', 'mesenchymal', 'other',
+  ]
