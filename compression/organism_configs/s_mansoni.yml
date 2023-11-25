@@ -3,6 +3,13 @@ measurement_types: ["gene_expression"]
 gene_expression:
   path: "juvenile.h5ad"
   normalisation: "to-raw"
+  feature_sequences:
+    path: "schistosoma_mansoni.PRJEA36577.WBPS18.protein.fa.gz"
+    type: "protein"
+    replace:
+      in: ".[0-9]+$"
+      out: ""
+
   tissues: ["whole"]
   cell_annotations:
     column: "tissue"

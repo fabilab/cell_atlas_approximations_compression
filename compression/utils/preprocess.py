@@ -9,6 +9,12 @@ def postprocess_feature_names(adata, config_mt):
     if "feature_name_postprocess" not in config_mt:
         return adata
 
+    if "remove_space" in config_mt["feature_name_postprocess"]:
+        adata.var_names = pd.Index(
+            adata.var_names.str.split(" ", expand=True).get_level_values(0),
+            name=adata.var_names.name,
+        )
+
     if "remove_prefixes" in config_mt["feature_name_postprocess"]:
         prefixes = config_mt["feature_name_postprocess"]["remove_prefixes"]
         if isinstance(prefixes, str):

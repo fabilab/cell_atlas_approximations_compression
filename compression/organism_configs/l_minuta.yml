@@ -3,6 +3,10 @@ measurement_types: ["gene_expression"]
 gene_expression:
   path: "l_minuta.h5ad"
   normalisation: raw
+  feature_sequences:
+    path: "l_minuta_prots_longest_orf.fasta.gz"
+    type: "protein"
+
   tissues: ["whole"]
   cell_annotations:
     column: "cell_type"

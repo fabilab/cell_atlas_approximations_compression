@@ -22,6 +22,10 @@ gene_expression:
 
   normalisation: 'to-raw+cptt+log'
 
+  feature_sequences:
+    path: "gene_sequences.fasta.gz"
+    type: "cDNA"
+
   cell_annotations:
     column: ["R_annotation", "S_annotation"]
 

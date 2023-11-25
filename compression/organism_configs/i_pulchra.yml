@@ -2,6 +2,13 @@ measurement_types: ["gene_expression"]
 
 gene_expression:
   normalisation: raw
+  feature_sequences:
+    path: "GSE154049_Isopu_nonred_transcriptome.fasta.gz"
+    type: "cDNA"
+    replace:
+      in: "_i1$"
+      out: ""
+
   tissues: ["whole"]
   cell_annotations:
     column: manual_annotations

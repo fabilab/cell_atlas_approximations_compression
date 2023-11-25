@@ -1,3 +1,4 @@
+import re
 import gzip
 import h5py
 import pandas as pd
@@ -61,13 +62,22 @@ def collect_feature_sequences(config_mt, features, measurement_type, species):
     with gzip.open(path, 'rt') as f:
         for gene, seq in SimpleFastaParser(f):
             # Sometimes they need a gene/id combo from biomart
-            if '|' in gene:
-                gene = gene.split('|')[0]
+            # Do this only if no finer regex is set.
+            if "replace" not in config_mt["feature_sequences"]:
+                if '|' in gene:
+                    gene = gene.split('|')[0]
+                if ' ' in gene:
+                    gene = gene.split()[0]
+            else:
+                pattern = config_mt["feature_sequences"]["replace"]["in"]
+                repl = config_mt["feature_sequences"]["replace"]["out"]
+                gene = re.sub(pattern, repl, gene)
+
+            # NOTE: uncomment to debug feature sequences
+            #import ipdb; ipdb.set_trace()
+
             if gene == '':
                 continue
-
-            if ' ' in gene:
-                gene = gene.split()[0]
 
             if gene in seqs:
                 seqs[gene] = seq

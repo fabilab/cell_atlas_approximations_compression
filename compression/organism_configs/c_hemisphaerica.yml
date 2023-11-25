@@ -3,6 +3,13 @@ measurement_types: ["gene_expression"]
 gene_expression:
   path: "c_hemisphaerica.h5ad"
   normalisation: raw
+  feature_sequences:
+    path: "20201030_cdhit_95.fasta.transdecoder.pep.gz"
+    type: "protein"
+    replace:
+      in: ".p1$"
+      out: ""
+
   tissues: ["whole"]
   cell_annotations:
     column: "annosSub"

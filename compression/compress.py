@@ -39,12 +39,12 @@ if __name__ == '__main__':
         #'h_sapiens',
         #'m_musculus',
         #'m_murinus',
-        #'d_melanogaster',
-        #'x_laevis',
+        'd_melanogaster',
+        'x_laevis',
 
         ## Single-organ species
         #'c_hemisphaerica',
-        's_pistillata',
+        #'s_pistillata',
         #'a_queenslandica',
         #'c_elegans',
         #'d_rerio',

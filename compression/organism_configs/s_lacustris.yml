@@ -3,6 +3,17 @@ measurement_types: ["gene_expression"]
 gene_expression:
   path: "s_lacustris_Musser_et_al_2020.h5ad"
   normalisation: raw
+  feature_sequences:
+    path: "GSE134912_spongilla_lacustris_Trinity.fasta.gz"
+    type: "cDNA"
+    replace:
+      in: "_i1$"
+      out: ""
+
+
+  feature_name_postprocess:
+    remove_space: true
+
   tissues: ["whole"]
   cell_annotations:
     column: "cell_type"

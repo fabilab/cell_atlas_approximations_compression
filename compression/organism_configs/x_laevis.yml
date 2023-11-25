@@ -7,6 +7,13 @@ gene_expression:
 
   normalisation: 'to-raw+cptt+log'
 
+  feature_sequences:
+    path: "XL_9.1_v1.8.3.2.primaryTranscripts.pep.fa.gz"
+    type: "protein"
+    replace:
+      in: "^[^|]+\\| "
+      out: ""
+
   filter_cells_global:
     metadata: ['tissue', 'notin', ["St48", "St66", "St54", "St59"]]
 
