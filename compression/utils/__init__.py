@@ -25,11 +25,15 @@ from .preprocess import (
 )
 from .compress import (
     compress_tissue,
+)
+from .store import (
     store_compressed_atlas,
 )
 from .sequences import (
-    collect_feature_sequences,
-    store_compressed_feature_sequences,
+    collect_store_feature_sequences,
+)
+from .postprocess import (
+    homogenise_features,
 )
 from .feature_annotations import (
     collect_feature_annotations,

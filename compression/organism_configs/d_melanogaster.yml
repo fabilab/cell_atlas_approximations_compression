@@ -25,6 +25,7 @@ gene_expression:
   feature_sequences:
     path: "gene_sequences.fasta.gz"
     type: "cDNA"
+    algorithm: "variable"
 
   cell_annotations:
     column: ["R_annotation", "S_annotation"]

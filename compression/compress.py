@@ -6,6 +6,7 @@ content:    Compress isodiametra pulchra, an acoel.
 '''
 import os
 import sys
+import argparse
 import gc
 import pathlib
 import gzip
@@ -26,38 +27,45 @@ from utils import (
     correct_annotations,
     compress_tissue,
     store_compressed_atlas,
-    collect_feature_sequences,
-    store_compressed_feature_sequences,
-    collect_feature_annotations,
+    collect_store_feature_sequences,
+    homogenise_features,
     )
 
 
 if __name__ == '__main__':
 
-    species_list = [
-        # Multi-organ species
-        #'h_sapiens',
-        #'m_musculus',
-        #'m_murinus',
-        'd_melanogaster',
-        'x_laevis',
+    pa = argparse.ArgumentParser()
+    pa.add_argument('--species', type=str, default='')
+    pa.add_argument('--maxtissues', type=int, default=1000)
+    args = pa.parse_args()
 
-        ## Single-organ species
-        #'c_hemisphaerica',
-        #'s_pistillata',
-        #'a_queenslandica',
-        #'c_elegans',
-        #'d_rerio',
-        #'h_miamia',
-        #'i_pulchra',
-        #'l_minuta',
-        #'m_leidyi',
-        #'n_vectensis',
-        #'s_mansoni',
-        #'s_mediterranea',
-        #'s_lacustris',
-        #'t_adhaerens',
-    ]
+    if args.species:
+        species_list = args.species.split(',')
+    else:
+        species_list = [
+            # Multi-organ species
+            'h_sapiens',
+            'm_musculus',
+            'm_murinus',
+            'd_melanogaster',
+            'x_laevis',
+
+            # Single-organ species
+            'c_hemisphaerica',
+            's_pistillata',
+            'a_queenslandica',
+            'c_elegans',
+            'd_rerio',
+            'h_miamia',
+            'i_pulchra',
+            'l_minuta',
+            'm_leidyi',
+            'n_vectensis',
+            's_mansoni',
+            's_mediterranea',
+            's_lacustris',
+            't_adhaerens',
+        ]
 
     for species in species_list:
         print('--------------------------------')
@@ -76,7 +84,7 @@ if __name__ == '__main__':
 
         # Iterate over gene expression, chromatin accessibility, etc.
         for measurement_type in config["measurement_types"]:
-            compressed_atlas = {}
+            compressed_atlas = {'tissues': {}}
             config_mt = config[measurement_type]
             celltype_order = config_mt["cell_annotations"]["celltype_order"]
 
@@ -143,8 +151,10 @@ if __name__ == '__main__':
                         tissues = adata.obs['tissue'].value_counts().index.tolist()
                         tissues = sorted([t for t in tissues if t != ''])
 
+            tissues = tissues[:args.maxtissues]
+
             # Iterate over tissues
-            for tissue in tissues:
+            for itissue, tissue in enumerate(tissues):
                 print(tissue)
 
                 if "path_metadata_global" in config_mt:
@@ -193,13 +203,9 @@ if __name__ == '__main__':
                     )
 
                     print("Compress atlas")
-                    compressed_atlas[tissue] = compress_tissue(
+                    compressed_atlas['tissues'][tissue] = compress_tissue(
                         adata_tissue, celltype_order,
                     )
-
-                    print('Get features')
-                    # TODO: harmonise across tissues, sometimes (e.g. fly) that is not a given
-                    features = adata_tissue.var_names
 
                 finally:
                     print('Garbage collect at the end of tissue')
@@ -212,66 +218,56 @@ if __name__ == '__main__':
             if "path_metadata_global" in config_mt:
                 del meta
 
-            print('Garbage collection before storing compressed atlas')
+            print('Garbage collection after tissue loop')
             gc.collect()
 
-            print('Store compressed atlas')
-            store_compressed_atlas(
-                    fn_out,
-                    compressed_atlas,
-                    tissues,
-                    celltype_order,
-                    measurement_type=measurement_type,
-            )
+            print('Homogenise feature list across organs if needed')
+            homogenise_features(compressed_atlas)
 
-            del compressed_atlas
-            del tissues
-            del celltype_order
+            print('Garbage collection after feature homogenisation')
+            gc.collect()
 
-            if "feature_sequences" in config_mt:
-                print('Garbage collection before storing feature sequences')
-                gc.collect()
-
-                print('Collect feature sequences')
-                feature_sequences = collect_feature_sequences(
-                    config_mt,
-                    features,
-                    measurement_type, species,
+            # Touch disk - if anything goes wrong, remove output file
+            try:
+                print('Store compressed atlas')
+                store_compressed_atlas(
+                        fn_out,
+                        compressed_atlas,
+                        tissues,
+                        celltype_order,
+                        measurement_type=measurement_type,
                 )
 
-                print('Store feature sequences')
-                store_compressed_feature_sequences(
-                    fn_out,
-                    feature_sequences,
-                    measurement_type,
-                )
+                if "feature_sequences" in config_mt:
+                    print('Get features')
+                    features = compressed_atlas['features']
 
-                del feature_sequences
+                del compressed_atlas
+                del tissues
+                del celltype_order
 
-            # FIXME
-            if False:
-                print('Garbage collection before storing feature annotations')
-                gc.collect()
+                if "feature_sequences" in config_mt:
+                    print('Garbage collection before storing feature sequences')
+                    gc.collect()
 
-                print('Collect feature annotations')
-                feature_annos = collect_feature_annotations(
-                        config_mt['feature_annotation'],
+                    print('Collect and store feature sequences')
+                    collect_store_feature_sequences(
+                        config_mt,
                         features,
                         measurement_type,
-                )
-
-                if feature_annos is not None:
-                    print('Store feature annotations')
-                    store_compressed_feature_annotations(
+                        species,
                         fn_out,
-                        feature_annos,
-                        measurement_type,
                     )
 
-                del feature_annos
+                    del features
 
-            print('Garbage collection at the end of a species and measurement type')
-            gc.collect()
+                print('Garbage collection at the end of a species and measurement type')
+                gc.collect()
+
+            except:
+                print('Delete corrupted partial file')
+                os.remove(fn_out)
+                raise
 
         if remove_old:
             print('Delete old file and rename new file to final filename')

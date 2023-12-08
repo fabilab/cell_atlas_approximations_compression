@@ -113,6 +113,8 @@ cell_annotations:
     lung: [
       'leukocyte',
       'myeloid cell',
+      'enterocyte',
+      'cumulus cell',
     ]
     marrow: [
       'leukocyte',
@@ -121,7 +123,7 @@ cell_annotations:
     muscle: [
       'leukocyte',
       'myeloid cell',
-      'cumulus',
+      'cumulus cell',
       'at2 cell',
       'cardiomyocyte',
       'oligodendrocyte',

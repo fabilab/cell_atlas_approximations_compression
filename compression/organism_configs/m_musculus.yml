@@ -222,10 +222,27 @@ cell_annotations:
   blacklist:
     "bladder": [
       "bladder cell",
+      "beta",
+    ]
+
+    "fat": [
+      "erythroblast",
     ]
 
     "liver": [
       'myeloid leukocyte',
+    ]
+
+    "mammary": [
+      "beta",
+    ]
+
+    "muscle": [
+      "beta",
+    ]
+
+    "trachea": [
+      "beta",
     ]
 
   cell_supertypes:

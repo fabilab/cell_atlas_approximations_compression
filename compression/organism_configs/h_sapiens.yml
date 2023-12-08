@@ -390,6 +390,10 @@ cell_annotations:
       'epithelial cell of uterus': 'epithelial'
       'ciliated epithelial cell': 'ciliated'
 
+      'bladder:nk cell': 'T'
+      'lymphnode:nk cell': 'T'
+      'pancreas:myeloid cell': 'macrophage'
+
       'transitional zone cortical cell': 'cortical'
       'zona fasciculata cortical cell': 'cortical'
       'zona glomerulosa cortical cell': 'cortical'
@@ -508,11 +512,13 @@ cell_annotations:
       'vascular smooth muscle 2',
       'cns,enteric neuron',
       'smooth muscle (general)',
+      'beta',
     ]
 
     'brain': [
       'peripheral nerve stromal',
       'smooth muscle (vaginal)',
+      'beta',
     ]
 
     'colon': [
@@ -521,6 +527,7 @@ cell_annotations:
       'ductal cell (pancreatic)',
       'chief cell',
       'luteal cell (ovarian)',
+      'beta',
     ]
 
     'esophagus': [
@@ -531,10 +538,12 @@ cell_annotations:
         'thyroid follicular cell',
         'pancreatic acinar cell',
         'luteal cell (ovarian)',
+      'beta',
     ]
 
     'eye': [
       'endothelial cell',
+      'beta',
     ]
 
     'fat': [
@@ -543,10 +552,12 @@ cell_annotations:
       'pancreatic acinar cell',
       'ductal cell (pancreatic)',
       'chief cell',
+      'beta',
     ]
 
     'gut': [
       'duodenum glandular cell',
+      'beta',
     ]
 
     'heart': [
@@ -558,11 +569,14 @@ cell_annotations:
       'thyroid follicular cell',
       'alveolar type 1 (at1) cell',
       'luteal cell (ovarian)',
+      'beta',
+      'hepatocyte',
     ]
 
     'liver': [
       'ductal cell (pancreatic)',
       'mammary luminal epithelial cell 2',
+      'beta',
     ]
 
     'lung': [
@@ -571,25 +585,30 @@ cell_annotations:
       'mammary luminal epithelial cell 2',
       'ductal cell (pancreatic)',
       'small intestinal enterocyte',
+      'beta',
     ]
 
     'mammary': [
-      'ductal cell (pancreatic)'  
+      'ductal cell (pancreatic)',
+      'beta',
     ]
 
     'muscle': [
       'peripheral nerve stromal',
       'ductal cell (pancreatic)',
       'luteal cell (ovarian)',
+      'beta',
     ]
 
     'nerve': [
       'ductal cell (pancreatic)',
       'luteal cell (ovarian)',
+      'beta',
     ]
 
     'ovary': [
       'ductal cell (pancreatic)',
+      'beta',
     ]
 
     'pancreas': [
@@ -598,32 +617,39 @@ cell_annotations:
 
     'prostate': [
       'sperm',
+      'beta',
     ]
 
     'salivary': [
       'salivary gland cell',
+      'beta',
     ]
 
     'skin': [
       'luteal cell (ovarian)',
       'peripheral nerve stromal',
+      'beta',
     ]
 
     'stomach': [
       'pancreatic delta,gamma cell',
       'pancreatic acinar cell',
+      'beta',
     ]
 
     'thyroid': [
       'pancreatic delta,gamma cell',
+      'beta',
     ]
 
     'uterus': [
       'luteal cell (ovarian)',
+      'beta',
     ]
  
     'vagina': [
       'luteal cell (ovarian)',
+      'beta',
     ]
 
   cell_supertypes:

@@ -35,7 +35,9 @@ gene_expression:
         'seam cells': 'seam'
         'sex myoblasts': 'sex myoblast'
         'gabaergic neurons': 'GABAergic neuron'
+        'intestinal/rectal muscle': 'gut muscle'
         'unclassified glia': 'glia'
+
     blacklist:
       whole: [
         'Failed QC', 'failed qc'
@@ -60,7 +62,7 @@ cell_annotations:
     'mesenchymal': [
       'body wall muscle',
       'pharyngeal muscle',
-      'intestinal/rectal muscle',
+      'gut muscle',
       'sex myoblast',
       'sheath',
       'socket',
