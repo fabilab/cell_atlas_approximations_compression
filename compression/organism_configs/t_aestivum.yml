@@ -1,0 +1,68 @@
+measurement_types: ["gene_expression"]
+
+gene_expression:
+  source: "Zhang et al 2023 (https://genomebiology.biomedcentral.com/articles/10.1186/s13059-023-02908-x)"
+  path: "t_aestivum.h5ad"
+  normalisation: raw
+
+  tissues: ["whole"]
+  cell_annotations:
+    column: "celltype"
+    rename_dict:
+      cell_types:
+        'epidermis/cortex i': 'epidermal'
+        'epidermis/cortex ii': 'epidermal'
+        'epidermis/root hair': 'epidermal'
+        'stem cell niche (scn)': 'stem'
+        'meristem i': 'meristem'
+        'meristem ii': 'meristem'
+        'proximal meristem': 'meristem'
+        'companion cell': 'companion'
+        'root cap': 'rootcap'
+        'xylem pole pericycle (xpp)': 'pericycle'
+        'phloem pole pericycle (ppp)': 'pericycle'
+        'immature pericycle cells (ipc)': 'pericycle'
+        'endodermis i (casparian strip)': 'endodermal'
+        'endodermis ii (casparian strip)': 'endodermal'
+        'root hair': 'roothair'
+        'immature sieve elements': 'sieve'
+        'provascular cells': 'provascular'
+    blacklist:
+      whole: [
+        'protophloem',
+        'root border cell',
+      ]
+
+cell_annotations:
+  cell_supertypes:
+    'epithelial': [
+      'epidermal',
+      'endodermal',
+      'rootcap',
+      'roothair',
+    ]
+
+    'mesenchymal': [
+      'columella',
+      'companion',
+      'pericycle',
+      'sieve',
+    ]
+
+    'endothelial': [
+      'metaxylem',
+      'protoxylem',
+      'provascular',
+    ]
+    
+    'other': [
+      'stem',
+      'meristem'
+    ]
+
+  supertype_order: [
+    'epithelial',
+    'endothelial',
+    'mesenchymal',
+    'other',
+  ]

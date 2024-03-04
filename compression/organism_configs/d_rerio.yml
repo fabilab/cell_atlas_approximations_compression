@@ -2,6 +2,7 @@ measurement_types: ["gene_expression"]
 
 gene_expression:
   path: "d_rerio_Wagner_et_al_2018.h5ad"
+  source: "Wagner et al. 2018 (https://www.science.org/doi/10.1126/science.aar4362)"
   normalisation: raw
   tissues: ["whole"]
   feature_sequences:

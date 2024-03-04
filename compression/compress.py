@@ -2,7 +2,7 @@
 '''
 author:     Fabio Zanini
 date:       22/09/23
-content:    Compress isodiametra pulchra, an acoel.
+content:    Compress all atlases.
 '''
 import os
 import sys
@@ -29,6 +29,7 @@ from utils import (
     store_compressed_atlas,
     collect_store_feature_sequences,
     homogenise_features,
+    store_gene_embeddings,
     )
 
 
@@ -58,13 +59,15 @@ if __name__ == '__main__':
             'd_rerio',
             'h_miamia',
             'i_pulchra',
-            'l_minuta',
             'm_leidyi',
             'n_vectensis',
             's_mansoni',
             's_mediterranea',
             's_lacustris',
             't_adhaerens',
+
+            'l_minuta',
+            'a_thaliana',
         ]
 
     for species in species_list:
@@ -73,7 +76,6 @@ if __name__ == '__main__':
         print('--------------------------------')
 
         config = load_config(species)
-        atlas_data_folder = root_repo_folder / 'data' / 'full_atlases' / 'RNA' / species
         fn_out = output_folder / f'{species}.h5'
 
         # Remove existing compressed atlas file if present, but only do it at the end
@@ -260,6 +262,14 @@ if __name__ == '__main__':
                     )
 
                     del features
+
+                    print('Garbage collection before ESM embeddings')
+                    if measurement_type == 'gene_expression':
+                        store_gene_embeddings(
+                            config_mt,
+                            species,
+                            fn_out,
+                        )
 
                 print('Garbage collection at the end of a species and measurement type')
                 gc.collect()

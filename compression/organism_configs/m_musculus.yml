@@ -3,6 +3,7 @@ measurement_types: [
 ]
 
 gene_expression:
+  source: "Tabula Muris Senis 2020 (https://www.nature.com/articles/s41586-020-2496-1)"
   path:
     bladder: "tabula-muris-senis-droplet-processed-official-annotations-Bladder.h5ad"
     colon: "tabula-muris-senis-droplet-processed-official-annotations-Large_Intestine.h5ad"
@@ -42,7 +43,7 @@ gene_expression:
 
     subannotation_kwargs:
       markers:
-        'endothelial cell':
+        'pancreas:endothelial cell':
           'arterial': ['Gja5', 'Bmx']
           'venous': ['Slc6a2', 'Vwf']
           'lymphatic': ['Ccl21a', 'Prox1', 'Thy1']
@@ -58,6 +59,12 @@ gene_expression:
           'acinar': ['Prss2', 'Try5', 'Sycn', 'Ctrb1', 'Clps', 'Ndrg1', 'Fabp4']
           'stellate': ['Plac9']
           'PP': ['Ppy']
+
+        'endothelial cell':
+          'arterial': ['Gja5', 'Bmx']
+          'venous': ['Slc6a2', 'Vwf']
+          'lymphatic': ['Ccl21a', 'Prox1', 'Thy1']
+          'capillary': ['Rn45s', 'Slc6a6', 'Comt']
 
         'lymphocyte':
           'B': ['Ms4a1', 'Cd79a', 'Cd79b', 'Cd19']
@@ -222,7 +229,7 @@ cell_annotations:
   blacklist:
     "bladder": [
       "bladder cell",
-      "beta",
+      'pancreatic b cell',
     ]
 
     "fat": [
@@ -234,15 +241,15 @@ cell_annotations:
     ]
 
     "mammary": [
-      "beta",
+      'pancreatic b cell',
     ]
 
     "muscle": [
-      "beta",
+      'pancreatic b cell',
     ]
 
     "trachea": [
-      "beta",
+      'pancreatic b cell',
     ]
 
   cell_supertypes:

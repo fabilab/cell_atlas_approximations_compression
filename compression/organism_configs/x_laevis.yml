@@ -3,6 +3,7 @@ measurement_types: [
 ]
 
 gene_expression:
+  source: "Liao et al. 2022 (https://www.nature.com/articles/s41467-022-31949-2)"
   path_global: "Xenopus_Figure1.h5ad"
 
   normalisation: 'to-raw+cptt+log'

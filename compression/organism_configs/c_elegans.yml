@@ -2,6 +2,7 @@ measurement_types: ["gene_expression"]
 
 gene_expression:
   path: "c_elegans_Cao_et_al_2017.h5ad"
+  source: "Cao et al. 2017 (https://www.science.org/doi/10.1126/science.aam8940)"
   normalisation: raw
   feature_annotation: 'c_elegans.PRJNA13758.WS287.annotations.gff3.gz'
   feature_sequences:

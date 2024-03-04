@@ -2,6 +2,7 @@ measurement_types: ["gene_expression"]
 
 gene_expression:
   path: "c_hemisphaerica.h5ad"
+  source: "Chari et al. 2021 (https://www.science.org/doi/10.1126/sciadv.abh1683#sec-4)"
   normalisation: raw
   feature_sequences:
     path: "20201030_cdhit_95.fasta.transdecoder.pep.gz"

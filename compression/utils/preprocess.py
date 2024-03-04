@@ -108,7 +108,9 @@ def normalise_counts(adata_tissue, input_normalisation, measurement_type="gene_e
 
 
 def subannotate(adata,
-                species, annotation,
+                species,
+                tissue,
+                annotation,
                 markers,
                 bad_prefixes=None,
                 verbose=True,
@@ -127,8 +129,11 @@ def subannotate(adata,
     if bad_prefixes is None:
         bad_prefixes = []
 
-    markersi = markers.get(annotation, None)
-    if markersi is None:
+    if f'{tissue}:{annotation}' in markers:
+        markersi = markers[f'{tissue}:{annotation}']
+    elif annotation in markers:
+        markersi = markers[annotation]
+    else:
         raise ValueError(
             f'Cannot subannotate without markers for {species}, {annotation}')
 
@@ -270,14 +275,20 @@ def correct_annotations(
             adata_coarse_type = adata[idx]
             print(f'Subannotating {celltype}')
             subannotations = subannotate(
-                adata_coarse_type, species, celltype,
+                adata_coarse_type, species, tissue, celltype,
                 **subannotation_kwargs,
             )
 
-            # Ignore reclustering into already existing types, we have enough
+            # Postprocess subannotations
             for subanno in subannotations:
+                # Ignore reclustering into already existing types, we have enough
                 if subanno in ct_found:
                     subannotations[subannotations == subanno] = ''
+
+                # Check subannotations again for blacklist
+                for ctbl in blacklist[tissue]:
+                    subannotations[subannotations == ctbl] = ''
+
             print('Subannotation done')
 
             celltypes_new[idx] = subannotations

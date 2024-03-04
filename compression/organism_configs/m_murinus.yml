@@ -3,6 +3,7 @@ measurement_types: [
 ]
 
 gene_expression:
+  source: "Tabula Microcebus (https://www.biorxiv.org/content/10.1101/2021.12.12.469460v2)"
   path:
     bladder: "Bladder_FIRM_hvg.h5ad"
     blood: "Blood_FIRM_hvg.h5ad"

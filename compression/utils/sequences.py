@@ -59,6 +59,10 @@ def _collect_store_feature_sequences_bulk(
     path = root_repo_folder / 'data' / 'full_atlases' / measurement_type / species / path
     seqs = {fea: '' for fea in features}
     with gzip.open(path, 'rt') as f:
+
+        ## FIXME
+        #missing = []
+
         for gene, seq in _SimpleFastaParser(f):
             # Sometimes they need a gene/id combo from biomart
             # Do this only if no finer regex is set.
@@ -76,6 +80,13 @@ def _collect_store_feature_sequences_bulk(
                 continue
             if gene in features:
                 seqs[gene] = seq
+            #else:
+            #    gene2 = gene.split('|')[1]
+            #    missing.append(gene2)
+
+    
+    #features2 = features.str.split('|', expand=True).get_level_values(1)
+    #import ipdb; ipdb.set_trace()
 
     seqs = pd.Series(seqs).loc[features]
 

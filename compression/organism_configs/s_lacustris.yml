@@ -1,6 +1,7 @@
 measurement_types: ["gene_expression"]
 
 gene_expression:
+  source: "Musser et al. 2021 (https://www.science.org/doi/10.1126/science.abj2949)"
   path: "s_lacustris_Musser_et_al_2020.h5ad"
   normalisation: raw
   feature_sequences:

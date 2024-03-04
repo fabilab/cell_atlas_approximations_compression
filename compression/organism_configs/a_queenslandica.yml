@@ -2,6 +2,7 @@ measurement_types: ["gene_expression"]
 
 gene_expression:
   path: "a_queenslandica_Sebe-Pedros_et_al_2018.h5ad"
+  source: "Sebé-Pedrós et al 2018 (https://www.nature.com/articles/s41559-018-0575-6)"
   normalisation: raw
   tissues: ["whole"]
   feature_sequences:

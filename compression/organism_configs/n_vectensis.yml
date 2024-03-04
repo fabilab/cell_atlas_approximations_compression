@@ -1,6 +1,7 @@
 measurement_types: ["gene_expression"]
 
 gene_expression:
+  source: "Steger et al 2022 (https://doi.org/10.1016/j.celrep.2022.111370)"
   path: "n_vectensis_Sebe-Pedros_et_al_2018.h5ad"
   normalisation: raw
   tissues: ["whole"]

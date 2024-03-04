@@ -39,6 +39,9 @@ from .feature_annotations import (
     collect_feature_annotations,
     store_compressed_feature_annotations,
 )
+from .gene_embeddings import (
+    store_gene_embeddings,
+)
 
 
 

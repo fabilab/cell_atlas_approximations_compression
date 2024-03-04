@@ -1,0 +1,81 @@
+measurement_types: ["gene_expression"]
+
+gene_expression:
+  path: "c_gigas.h5ad"
+  source: "Piovani et al 2023 (https://doi.org/10.1126/sciadv.adg6034)"
+  normalisation: raw
+  tissues: ["whole"]
+  cell_annotations:
+    column: "celltype"
+    rename_dict:
+      cell_types:
+        'neu-ap': 'neuron'
+        'neu-pos': 'neuron'
+        'hem-1': 'hemocyte'
+        'hem-2': 'hemocyte'
+        'hem-3': 'hemocyte'
+        'hem-4': 'hemocyte'
+        'myo-aa': 'adductor muscle'
+        'myo-pax6+': 'muscle'
+        'myo-vvr': 'ventral muscle'
+        'myo-dvr-1': 'dorsal muscle'
+        'myo-dvr-2': 'dorsal muscle'
+        'myo-dvr-3': 'dorsal muscle'
+        'myo-dvr-3': 'dorsal muscle'
+        'myo-lvr-1': 'larval muscle'
+        'myo-lvr-2': 'larval muscle'
+        'unk-apical': 'apical'
+        'cilia-1': 'ciliary'
+        'cilia-2': 'ciliary'
+        'cilia-3': 'ciliary'
+        'cilia-4': 'ciliary'
+        'she-1': 'shell'
+        'she-2': 'shell'
+        'she-3': 'shell'
+        'she-4': 'shell'
+        'she-5': 'shell'
+        'she-rel': 'outershell'
+        'pro-1': 'proliferative'
+        'pro-2': 'proliferative'
+        'pro-3': 'proliferative'
+        'pro-4': 'proliferative'
+        'pro-5': 'proliferative'
+        'pro-6': 'proliferative'
+
+    blacklist:
+      whole: [
+        '80', '96', '100',
+        '13.21',
+        'unk',
+      ]
+
+cell_annotations:
+  cell_supertypes:
+    'epithelial': [
+      'ciliary',
+      'shell',
+      'outershell',
+    ]
+
+    'mesenchymal': [
+      'hemocyte',
+      'adductor muscle',
+      'dorsal muscle',
+      'ventral muscle',
+      'larval muscle',
+      'muscle',
+    ]
+
+    'other': [
+      'neuron',
+      'apical',
+      'proliferative',
+    ]
+
+  supertype_order: [
+    "epithelial",
+    "mesenchymal",
+    "other"
+  ]
+
+

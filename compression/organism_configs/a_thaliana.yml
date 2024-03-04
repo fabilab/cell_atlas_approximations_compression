@@ -1,0 +1,52 @@
+measurement_types: ["gene_expression"]
+
+gene_expression:
+  path: "a_thaliana_root.h5ad"
+  source: "Shahan et al 2022 (https://www.sciencedirect.com/science/article/pii/S1534580722000338)"
+  normalisation: raw
+
+  tissues: ["whole"]
+  cell_annotations:
+    column: "celltype.anno"
+    rename_dict:
+      cell_types:
+        'lateral root cap': 'rootcap'
+        'quiescent center': 'center'
+        'cortex': 'epidermal'
+        'endodermis': 'endodermal'
+    blacklist:
+      whole: [
+        "unknown",
+      ]
+
+cell_annotations:
+  cell_supertypes:
+    'epithelial': [
+      'epidermal',
+      'endodermal',
+      'rootcap',
+    ]
+
+    'mesenchymal': [
+      'columella',
+      'atrichoblast',
+      'trichoblast',
+      'pericycle',
+      'procambium',
+    ]
+
+    'endothelial': [
+      'xylem',
+      'phloem',
+    ]
+    
+    'other': [
+      'center',
+    ]
+
+  supertype_order: [
+    'epithelial',
+    'endothelial',
+    'mesenchymal',
+    'other',
+  ]

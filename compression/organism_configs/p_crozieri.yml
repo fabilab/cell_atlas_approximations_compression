@@ -1,0 +1,95 @@
+measurement_types: ["gene_expression"]
+
+gene_expression:
+  path: "p_crozieri.h5ad"
+  source: "Piovani et al 2023 (https://doi.org/10.1126/sciadv.adg6034)"
+  normalisation: raw
+  tissues: ["whole"]
+  cell_annotations:
+    column: "celltype"
+    rename_dict:
+      cell_types:
+        'neuron-p1': 'neuron'
+        'neuron-p2': 'neuron'
+        'neuron-gnrh+': 'neuron'
+        'neuron-mip+': 'neuron'
+        'neuron-apgwv+': 'neuron'
+        'neuron-sy65-4+': 'neuron'
+        'neuron-iprf+': 'neuron'
+        'neuron-lasgv+': 'neuron'
+        'rha-1': 'rhabite'
+        'rha-2': 'rhabite'
+        'myo-1': 'muscle'
+        'myo-2': 'muscle'
+        'myo-p1': 'muscle progenitor'
+        'myo-p2': 'muscle progenitor'
+        'cilia-1': 'ciliated'
+        'cilia-2': 'ciliated'
+        'cilia-3': 'ciliated'
+        'cilia-p1': 'ciliated'
+        'cilia-p2': 'ciliated'
+        'proneph': 'protonephridial'
+        'cath+-1': 'cathepsin'
+        'cath+-2': 'cathepsin'
+        'neo-1': 'neoblast'
+        'neo-2': 'neoblast'
+        'neo-3': 'neoblast'
+        'gut-1': 'gut'
+        'gut-2': 'gut'
+        'gut-3': 'gut'
+        'gut-4': 'gut'
+        'mes-tega+1': 'scattered'
+        'mes-tega+2': 'scattered'
+        'mes-tega+3': 'scattered'
+        'mes-macif+1': 'netlike'
+        'mes-macif+2': 'netlike'
+        'gut-rel-1': 'exocrine'
+        'gut-rel-2': 'exocrine'
+        'gut-rel-3': 'exocrine'
+        'gut-top': 'topgut'
+
+    blacklist:
+      whole: [
+        '80', '96', '100',
+        '13.21',
+        'unk',
+        'neuron-cilia-1',
+        'neuron-cilia-2',
+        'gut-unk-1',
+        'gut-unk-2',
+        'gut-unk-3',
+        'gut-unk-4',
+      ]
+
+cell_annotations:
+  cell_supertypes:
+    'epithelial': [
+      'ciliated',
+      'pharynx',
+      'gut',
+      'topgut',
+      'exocrine',
+    ]
+
+    'mesenchymal': [
+      'muscle',
+      'muscle progenitor',
+      'rhabite',
+      'cathepsin',
+      'scattered',
+      'netlike',
+    ]
+
+    'other': [
+      'neuron',
+      'protonephridial',
+      'neoblast',
+    ]
+
+  supertype_order: [
+    "epithelial",
+    "mesenchymal",
+    "other"
+  ]
+
+

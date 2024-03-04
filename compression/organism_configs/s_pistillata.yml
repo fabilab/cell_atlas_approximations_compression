@@ -1,6 +1,7 @@
 measurement_types: ["gene_expression"]
 
 gene_expression:
+  source: "Levi et al. 2021 (https://www.sciencedirect.com/science/article/pii/S0092867421004402)"
   path: "s_pistillata.h5ad"
   normalisation: raw
   feature_sequences:

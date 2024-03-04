@@ -1,6 +1,7 @@
 measurement_types: ["gene_expression"]
 
 gene_expression:
+  source: "Plass et al. 2018 (https://doi.org/10.1126/science.aaq1723)"
   path: "s_mediterranea_with_cell_and_transcript_annotations.h5ad"
   normalisation: raw
   feature_sequences:

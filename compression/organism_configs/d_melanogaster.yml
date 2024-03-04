@@ -20,6 +20,7 @@ gene_expression:
     wall: "s_fca_biohub_body_wall_10x.h5ad"
     wing: "s_fca_biohub_wing_10x.h5ad"
 
+  source: "Li et al. 2022 (https://doi.org/10.1126/science.abk2432)"
   normalisation: 'to-raw+cptt+log'
 
   feature_sequences:

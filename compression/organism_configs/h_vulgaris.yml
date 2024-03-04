@@ -1,0 +1,94 @@
+measurement_types: ["gene_expression"]
+
+gene_expression:
+  path: "h_vulgaris.h5ad"
+  source: "Sieert et al 2019 (https://doi.org/10.1126/science.aav9314)"
+  normalisation: cptt
+  tissues: ["whole"]
+  cell_annotations:
+    column: "Cluster"
+    rename_dict:
+      cell_types:
+        'enep_sc1': 'proendodermal'
+        'enep_sc2': 'proendodermal'
+        'enep_sc3': 'proendodermal'
+        'enep_tent': 'endotentacle'
+        'enep_head': 'endohead'
+        'enep_foot': 'endofoot'
+        'ecep_sc1': 'proectodermal'
+        'ecep_sc2': 'proectodermal'
+        'ecep_head': 'ectohead'
+        'ecep_bd': 'basal'
+        'i_sc/prog': 'prointestinal'
+        'i_nc_gc_prog': 'prointestinal'
+        'i_mgl': 'male'
+        'i_fmgl1': 'female'
+        'i_nem': 'nematocyte'
+        'i_zmg1': 'zymogen'
+        'i_zmg2': 'zymogen'
+        'i_fmgl2_nurse': 'nurse'
+        'i_nc_prog': 'proneuron'
+        'i_n_ec1': 'neuron'
+        'i_n_ec2': 'neuron'
+        'i_n_ec3': 'neuron'
+        'i_n_ec3': 'neuron'
+        'i_n_ec5': 'neuron'
+        'i_n_en1': 'neuron'
+        'i_n_en2': 'neuron'
+        'i_n_en3': 'neuron'
+        'i_n_ec4': 'neuron'
+        'i_nb1': 'nematoblast'
+        'i_nb2': 'nematoblast'
+        'i_nb3': 'nematoblast'
+        'i_nb4': 'nematoblast'
+        'i_nb5': 'nematoblast'
+        'i_gmgc': 'granular'
+        'i_smgc1': 'spumous'
+        'i_smgc2': 'spumous'
+
+    blacklist:
+      whole: [
+        'enep-nb(pd)',
+        'enep_tent-nem(pd)',
+        'ecep_bat1(mp)',
+        'enep-nem(pd)',
+        'ecep-nem(id)',
+        'ecep_bat2(mp)',
+        'ecep-nb(pd)',
+      ]
+
+cell_annotations:
+  cell_supertypes:
+    'epithelial': [
+      'ectohead',
+      'endohead',
+      'endofoot',
+      'endotentacle',
+      'basal',
+    ]
+
+    'mesenchymal': [
+      'zymogen',
+      'spumous',
+      'granular',
+      'nurse',
+    ]
+
+    'other': [
+      'neuron',
+      'proneuron',
+      'proectodermal',
+      'proendodermal',
+      'prointestinal',
+      'nematocyte',
+      'nematoblast',
+      'female',
+      'male',
+    ]
+
+  supertype_order: [
+    "epithelial",
+    "mesenchymal",
+    "other"
+  ]
+

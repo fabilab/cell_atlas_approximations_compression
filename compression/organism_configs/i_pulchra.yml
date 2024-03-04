@@ -1,6 +1,7 @@
 measurement_types: ["gene_expression"]
 
 gene_expression:
+  source: "Duruz et al. 2020 (https://academic.oup.com/mbe/article/38/5/1888/6045962)"
   normalisation: raw
   feature_sequences:
     path: "GSE154049_Isopu_nonred_transcriptome.fasta.gz"

@@ -1,6 +1,7 @@
 measurement_types: ["gene_expression"]
 
 gene_expression:
+  source: "Li et al. 2021 (https://www.nature.com/articles/s41467-020-20794-w)"
   path: "juvenile.h5ad"
   normalisation: "to-raw"
   feature_sequences:

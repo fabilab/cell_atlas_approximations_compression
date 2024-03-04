@@ -2,10 +2,14 @@ measurement_types: ["gene_expression"]
 
 gene_expression:
   path: "20230628_hm_adult_annotated.h5ad"
+  source: "Hulett et al. 2023 (https://www.nature.com/articles/s41467-023-38016-4)"
   normalisation: "to-raw"
   feature_sequences:
     path: "8_26_19_hmi_transcriptome_20140211_filtered_long_annotated.fasta.gz"
     type: "cDNA"
+    replace:
+      in: ""
+      out: ""
   tissues: ["whole"]
   cell_annotations:
     column: "cell_types"

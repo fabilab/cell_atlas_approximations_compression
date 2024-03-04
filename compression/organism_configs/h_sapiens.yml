@@ -3,6 +3,7 @@ measurement_types: [
 ]
 
 gene_expression:
+  source: "Tabula Sapiens (https://www.science.org/doi/10.1126/science.abl4896)"
   path:
     bladder: "TS_Bladder.h5ad"
     blood: "TS_Blood.h5ad"
@@ -122,6 +123,8 @@ gene_expression:
       ]
 
 chromatin_accessibility:
+  source: "Zhang et al. Ren. A single-cell atlas of chromatin accessibility in the human genome (https://doi.org/10.1016/j.cell.2021.10.024)."
+
   path_global: "Ren_lab_cell_by_cCRE_matrix.h5ad"
   path_metadata_global: 'Ren_lab_Cell_metadata.tsv.gz'
   load_params:

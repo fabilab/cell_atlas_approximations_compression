@@ -2,6 +2,7 @@ measurement_types: ["gene_expression"]
 
 gene_expression:
   path: "l_minuta.h5ad"
+  source: "Abramson et al. 2022 (https://doi.org/10.1093/plphys/kiab564)"
   normalisation: raw
   feature_sequences:
     path: "l_minuta_prots_longest_orf.fasta.gz"

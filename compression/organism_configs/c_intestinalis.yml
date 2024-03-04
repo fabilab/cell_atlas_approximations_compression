@@ -1,0 +1,46 @@
+measurement_types: ["gene_expression"]
+
+gene_expression:
+  path: "c_intestinalis_lv.h5ad"
+  source: "Cao et al. 2019 (https://www.nature.com/articles/s41586-019-1385-y)"
+  normalisation: cptt
+  tissues: ["whole"]
+  cell_annotations:
+    column: "tissue"
+    rename_dict:
+      cell_types:
+        'mesenchyme': 'mesenchymal'
+        'endoderm': 'endodermal'
+        'nervous system': 'neuron'
+        'epidermis': 'epidermal'
+        'muscle & heart': 'muscle'
+
+
+    blacklist:
+      whole: [
+      ]
+
+cell_annotations:
+  cell_supertypes:
+    'epithelial': [
+      'epidermal',
+      'endodermal',
+    ]
+
+    'mesenchymal': [
+      'mesenchymal',
+      'muscle',
+      'notochord',
+    ]
+
+    'other': [
+      'neuron',
+      'germ',
+    ]
+
+  supertype_order: [
+    "epithelial",
+    "mesenchymal",
+    "other"
+  ]
+
