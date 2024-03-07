@@ -1,0 +1,76 @@
+measurement_types: ["gene_expression"]
+
+gene_expression:
+  path: "s_purpuratus.h5ad"
+  source: "Paganos et al 2021 (https://doi.org/10.7554/eLife.70416)"
+  normalisation: raw
+  tissues: ["whole"]
+  cell_annotations:
+    column: "celltype"
+    rename_dict:
+      cell_types:
+        'sp_stomach-1': 'stomach'
+        'sp_stomach-2': 'stomach'
+        'sp_stomach-3': 'stomach'
+        'sp_ciliary-cells': 'ciliary'
+        'sp_immune-cells': 'immune'
+        'sp_neuronal-cells': 'neuron'
+        'sp_exo-pancr': 'exocrine'
+        'sp_blastoc-cells': 'blastocoelar'
+        'sp_ap-cells': 'apical'
+        'sp_esoph-cells': 'esophageal'
+        'sp_esoph-myo': 'esophageal muscle'
+        'sp_skeletal-cells': 'skeletal'
+        'sp_intestine-cells': 'intestinal'
+        'sp_anal-cells': 'anal'
+        'sp_cardiac-sph': 'cardiac'
+        'sp_coelomic-pouch': 'coelomic'
+        'sp_pyloric-sph': 'pyloric'
+        'sp_ab-ecto': 'aboral'
+        'sp_uo-ecto': 'oral'
+        'sp_lo-ecto': 'oral'
+
+
+    blacklist:
+      whole: [
+      ]
+
+cell_annotations:
+  cell_supertypes:
+    'immune': [
+      'immune',
+      'blastocoelar',
+    ]
+
+    'epithelial': [
+      'ciliary',
+      'stomach',
+      'apical',
+      'esophageal',
+      'aboral',
+      'oral',
+    ]
+
+    'mesenchymal': [
+      'exocrine',
+      'anal',
+      'intestinal',
+      'cardiac',
+      'coelomic',
+      'pyloric',
+      'esophageal muscle',
+    ]
+
+    'other': [
+      'neuron',
+      'skeletal',
+    ]
+
+  supertype_order: [
+    "immune",
+    "epithelial",
+    "mesenchymal",
+    "other"
+  ]
+
+

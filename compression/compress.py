@@ -45,13 +45,14 @@ if __name__ == '__main__':
     else:
         species_list = [
             # Multi-organ species
-            'h_sapiens',
-            'm_musculus',
-            'm_murinus',
-            'd_melanogaster',
-            'x_laevis',
+            #'h_sapiens',
+            #'m_musculus',
+            #'m_murinus',
+            #'d_melanogaster',
+            #'x_laevis',
 
             # Single-organ species
+            'c_gigas',
             'c_hemisphaerica',
             's_pistillata',
             'a_queenslandica',
@@ -61,13 +62,16 @@ if __name__ == '__main__':
             'i_pulchra',
             'm_leidyi',
             'n_vectensis',
+            'p_crozieri',
             's_mansoni',
             's_mediterranea',
             's_lacustris',
+            's_purpuratus',
             't_adhaerens',
 
             'l_minuta',
             'a_thaliana',
+            't_aestivum',
         ]
 
     for species in species_list:
@@ -261,10 +265,12 @@ if __name__ == '__main__':
                         fn_out,
                     )
 
-                    del features
-
                     print('Garbage collection before ESM embeddings')
+                    del features
+                    gc.collect()
+
                     if measurement_type == 'gene_expression':
+                        print('Collect and store ESM embeddings')
                         store_gene_embeddings(
                             config_mt,
                             species,

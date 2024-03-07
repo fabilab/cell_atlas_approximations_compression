@@ -286,8 +286,9 @@ def correct_annotations(
                     subannotations[subannotations == subanno] = ''
 
                 # Check subannotations again for blacklist
-                for ctbl in blacklist[tissue]:
-                    subannotations[subannotations == ctbl] = ''
+                if tissue in blacklist:
+                    for ctbl in blacklist[tissue]:
+                        subannotations[subannotations == ctbl] = ''
 
             print('Subannotation done')
 
