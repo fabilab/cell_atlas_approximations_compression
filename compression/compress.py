@@ -100,7 +100,7 @@ if __name__ == '__main__':
 
             if "path_global" in config_mt:
                 print(f"Read full atlas")
-                adata = anndata.read(config_mt["path_global"], **load_params)
+                adata = anndata.read_h5ad(config_mt["path_global"], **load_params)
 
             if "path_metadata_global" in config_mt:
                 print("Read global metadata separately")
@@ -168,7 +168,7 @@ if __name__ == '__main__':
 
                 if "path_global" not in config_mt:
                     print(f"Read full atlas for {tissue}")
-                    adata_tissue = anndata.read(config_mt["path"][tissue], **load_params)
+                    adata_tissue = anndata.read_h5ad(config_mt["path"][tissue], **load_params)
                 else:
                     print(f'Slice cells for {tissue}')
                     if "path_metadata_global" in config_mt:

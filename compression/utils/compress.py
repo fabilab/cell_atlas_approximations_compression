@@ -56,6 +56,7 @@ def compress_tissue(
             # Depending if it was a matrix or not, we are already there
             if not np.isscalar(frac_ct[0]):
                 frac_ct = frac_ct[0]
+            frac_ct = frac_ct.astype(np.float32)
             frac.loc[:, celltype] = frac_ct
 
     # Local neighborhoods
@@ -200,11 +201,12 @@ def _compress_neighborhoods(
             # Depending on whether it was dense or sparse, we might already be there
             if not np.isscalar(frac_i[0]):
                 frac_i = frac_i[0]
+            frac_i = frac_i.astype(np.float32)
             nei_frac.iloc[:, i] = frac_i
 
         # Add the coordinates of the center
         points_i = points[idx]
-        nei_coords.iloc[:, i] = points_i.mean(axis=0)
+        nei_coords.iloc[:, i] = points_i.mean(axis=0).astype(np.float32)
 
         # Add the convex hull
         hull = ConvexHull(points_i)
