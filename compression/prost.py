@@ -37,8 +37,9 @@ def iterate_h5(h5file):
 # The following functions are PROST, straight from:
 # https://github.com/MesihK/prost/blob/master/src/pyprost/prosttools.py
 def iterate_fasta(fastafile):
+    import gzip
     from itertools import groupby
-    with open(fastafile) as fh:
+    with gzip.open(fastafile) as fh:
         faiter = (x[1] for x in groupby(fh, lambda line: line[0] == ">"))
         for header in faiter:
             header = next(header)[1:].strip()
@@ -128,10 +129,10 @@ if __name__ == "__main__":
 
     if not args.use_approximations:
         # fasta files
-        input_files = glob.glob('peptide_sequences/*.fasta')
+        input_files = glob.glob('../data/peptide_sequences/*.fasta.gz')
     else:
         # approximation files
-        input_files = glob.glob('../compressed_atlas/prototype2/cell_atlas_approximations_compression/data/atlas_approximations/*.h5')
+        input_files = glob.glob('../data/atlas_approximations/*.h5')
 
     if args.species:
         species = args.species.split(',')
