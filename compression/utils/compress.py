@@ -193,7 +193,7 @@ def _compress_neighborhoods(
         # Depending on whether it was dense or sparse, we might already be there
         if not np.isscalar(avg_i[0]):
             avg_i = avg_i[0]
-        nei_avg.iloc[:, i] = avg_i
+        nei_avg.iloc[:, i] = avg_i.astype(np.float32)
 
         # Add the fraction expressing
         if measurement_type == "gene_expression":

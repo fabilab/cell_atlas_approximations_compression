@@ -78,6 +78,7 @@ def store_compressed_atlas(
     with h5py.File(fn_out, 'a') as h5_data:
         me = h5_data.create_group(measurement_type)
 
+        # Store feature sequences
         features = list(compressed_atlas_with_features['features'])
         me.create_dataset('features', data=np.array(features).astype('S'))
     

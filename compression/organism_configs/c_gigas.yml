@@ -5,6 +5,10 @@ gene_expression:
   source: "Piovani et al 2023 (https://doi.org/10.1126/sciadv.adg6034)"
   normalisation: raw
   tissues: ["whole"]
+  feature_sequences:
+    path: "Crassostrea_gigas_longest_pep_noprotid.fasta.gz"
+    type: "protein"
+
   cell_annotations:
     column: "celltype"
     rename_dict:

@@ -5,6 +5,7 @@ gene_expression:
   source: "Paganos et al 2021 (https://doi.org/10.7554/eLife.70416)"
   normalisation: raw
   tissues: ["whole"]
+
   cell_annotations:
     column: "celltype"
     rename_dict:
