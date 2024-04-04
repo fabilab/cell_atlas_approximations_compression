@@ -1,0 +1,51 @@
+measurement_types: ["gene_expression"]
+
+gene_expression:
+  path: "p_dumerilii.h5ad"
+  source: "Achim et al 2017 (https://academic.oup.com/mbe/article/35/5/1047/4823215)"
+  normalisation: raw
+  tissues: ["whole"]
+  cell_annotations:
+    column: "CellType"
+    rename_dict:
+      cell_types:
+        'undifferentiated': 'undifferentiated'
+        'non-apical ectodermal': 'ectodermal'
+        'muscle': 'muscle'
+        'apicalnervoussystem': 'neuron'
+        'ciliary bands': 'ciliary'
+        'midgut': 'gut'
+
+    blacklist:
+      whole: [
+        '-',
+      ]
+
+cell_annotations:
+  cell_supertypes:
+    'immune': [
+    ]
+
+    'epithelial': [
+      'ectodermal',
+      'ciliary',
+    ]
+
+    'mesenchymal': [
+      'muscle',
+      'gut',
+    ]
+
+    'other': [
+      'neuron',
+      'undifferentiated',
+    ]
+
+  supertype_order: [
+    "immune",
+    "epithelial",
+    "mesenchymal",
+    "other"
+  ]
+
+

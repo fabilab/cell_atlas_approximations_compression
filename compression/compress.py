@@ -244,19 +244,23 @@ if __name__ == '__main__':
                         measurement_type=measurement_type,
                 )
 
-                if "feature_sequences" in config_mt:
-                    print('Get features')
-                    features = compressed_atlas['features']
+                print('Get features')
+                features = compressed_atlas['features']
 
                 del compressed_atlas
                 del tissues
                 del celltype_order
 
-                if "feature_sequences" in config_mt:
+                # Store feature sequences for gene expression only
+                # TODO: we might want the ATAC peaks, but we do not
+                # necessarily want to store the entire genome?
+                if measurement_type == 'gene_expression':
                     print('Garbage collection before storing feature sequences')
                     gc.collect()
 
-                    print('Collect and store feature sequences')
+                    print(features)
+
+                    print('Collect and store feature sequences (peptides)')
                     collect_store_feature_sequences(
                         config_mt,
                         features,
@@ -268,7 +272,6 @@ if __name__ == '__main__':
                     # Do not store gene/protein embeddings by default, they are added later on
                     if False:
                         print('Garbage collection before ESM embeddings')
-                        del features
                         gc.collect()
 
                         if measurement_type == 'gene_expression':
@@ -280,6 +283,7 @@ if __name__ == '__main__':
                             )
 
                 print('Garbage collection at the end of a species and measurement type')
+                del features
                 gc.collect()
 
             except:

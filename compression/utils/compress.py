@@ -49,7 +49,7 @@ def compress_tissue(
         # Depending if it was a matrix or not, we are already there
         if not np.isscalar(avg_ct[0]):
             avg_ct = avg_ct[0]
-        avg.loc[:, celltype] = avg_ct
+        avg.loc[:, celltype] = avg_ct.astype(np.float32)
 
         if measurement_type == "gene_expression":
             frac_ct = np.asarray((Xidx > 0).mean(axis=0))

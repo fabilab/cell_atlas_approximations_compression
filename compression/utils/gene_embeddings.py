@@ -27,7 +27,7 @@ def store_gene_embeddings(
         me = h5['gene_expression']
 
         # Fill noncoding genes with NaNs and use the same gene order as the atlas
-        features = me['features'].asstr()[:]
+        features = me['var_names'].asstr()[:]
         missing = list(set(features) - set(features_emb))
         missing_df = pd.DataFrame(
             np.zeros((len(missing), emb_df.shape[1]), dtype=emb_df.values.dtype),
