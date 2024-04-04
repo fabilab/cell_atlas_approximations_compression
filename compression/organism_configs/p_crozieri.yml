@@ -5,6 +5,9 @@ gene_expression:
   source: "Piovani et al 2023 (https://doi.org/10.1126/sciadv.adg6034)"
   normalisation: raw
   tissues: ["whole"]
+  feature_sequences:
+    path: "Pcro_longest_prot_no_t.fasta.gz"
+    type: "protein"
   cell_annotations:
     column: "celltype"
     rename_dict:

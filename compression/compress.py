@@ -266,17 +266,19 @@ if __name__ == '__main__':
                         fn_out,
                     )
 
-                    print('Garbage collection before ESM embeddings')
-                    del features
-                    gc.collect()
+                    # Do not store gene/protein embeddings by default, they are added later on
+                    if False:
+                        print('Garbage collection before ESM embeddings')
+                        del features
+                        gc.collect()
 
-                    if measurement_type == 'gene_expression':
-                        print('Collect and store ESM embeddings')
-                        store_gene_embeddings(
-                            config_mt,
-                            species,
-                            fn_out,
-                        )
+                        if measurement_type == 'gene_expression':
+                            print('Collect and store ESM embeddings')
+                            store_gene_embeddings(
+                                config_mt,
+                                species,
+                                fn_out,
+                            )
 
                 print('Garbage collection at the end of a species and measurement type')
                 gc.collect()
