@@ -62,6 +62,7 @@ if __name__ == '__main__':
             'i_pulchra',
             'm_leidyi',
             'n_vectensis',
+            'p_dumerilii',
             'p_crozieri',
             's_mansoni',
             's_mediterranea',

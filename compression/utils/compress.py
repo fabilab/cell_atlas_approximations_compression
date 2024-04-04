@@ -99,17 +99,20 @@ def _compress_neighborhoods(
     celltypes = list(ncells.keys())
 
     # Subsample with some regard for cell typing
-    print('   Subsampling for cell state compression')
-    cell_ids = []
-    for celltype, ncell in ncells.items():
-        cell_ids_ct = adata.obs_names[adata.obs['cellType'] == celltype]
-        if ncell > max_cells_per_type:
-            idx_rand = np.random.choice(range(ncell), size=max_cells_per_type, replace=False)
-            cell_ids_ct = cell_ids_ct[idx_rand]
-        cell_ids.extend(list(cell_ids_ct))
-    adata = adata[cell_ids].copy()
-    nsub = len(cell_ids)
-    print(f'   Subsampling done: {nsub} cells')
+    if adata.shape[0] >= 2000:
+        print('   Subsampling for cell state compression')
+        cell_ids = []
+        for celltype, ncell in ncells.items():
+            cell_ids_ct = adata.obs_names[adata.obs['cellType'] == celltype]
+            if ncell > max_cells_per_type:
+                idx_rand = np.random.choice(range(ncell), size=max_cells_per_type, replace=False)
+                cell_ids_ct = cell_ids_ct[idx_rand]
+            cell_ids.extend(list(cell_ids_ct))
+        adata = adata[cell_ids].copy()
+        nsub = len(cell_ids)
+        print(f'   Subsampling done: {nsub} cells')
+    else:
+        print('    Less than 2000 cells, no subsampling needed')
 
     ##############################################
     # USE AN EXISTING EMBEDDING OR MAKE A NEW ONE
