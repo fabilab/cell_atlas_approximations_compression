@@ -5,9 +5,6 @@ gene_expression:
   source: "Wagner et al. 2018 (https://www.science.org/doi/10.1126/science.aar4362)"
   normalisation: raw
   tissues: ["whole"]
-  feature_sequences:
-    path: "gene_sequences.fasta.gz"
-    type: "cDNA"
   cell_annotations:
     column: "CellType"
     rename_dict:

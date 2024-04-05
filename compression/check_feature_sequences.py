@@ -25,12 +25,32 @@ from utils import (
 
 
 
-def read_features_from_h5ad(filename, **load_params):
+def read_features_from_h5ad(filename, config_mt, **load_params):
     import h5py
     import hdf5plugin
 
+    if '-to' in config_mt['normalisation']:
+        varkey = 'raw.var'
+    else:
+        varkey = 'var'
+
     with h5py.File(filename, 'r') as h5_data:
-        features = h5_data['var']['_index'].asstr()[:]
+        group = h5_data[varkey]
+        if isinstance(h5_data[varkey], h5py.Dataset):
+            features = h5_data[varkey][:]
+            features = pd.Index(features['index']).str.decode('utf8').values
+        else:
+            if '_index' in group.attrs.keys():
+                cands = [group.attrs['_index']]
+            else:
+                cands = ['_index', 'Row', 'index', 'Genes', 'Unnamed: 0', 'Gene']
+            for cand in cands:
+                if cand in group:
+                    features = group[cand].asstr()[:]
+                    break
+            else:
+                print(group.keys())
+                import ipdb; ipdb.set_trace()
     return features
 
 
@@ -64,8 +84,8 @@ def postprocess_feature_names(features, config_mt):
 def homogenise_features(features_dict):
     """Ensure all tissues use the same features"""
     if len(features_dict['tissues']) == 1:
-        for tissue, group in compressed_atlas['tissues'].items():
-            return group['features']
+        for tissue, group in features_dict['tissues'].items():
+            return group
 
     features_all = sorted(
         set().union(*(set(g) for g in features_dict['tissues'].values())),
@@ -118,32 +138,34 @@ if __name__ == '__main__':
         species_list = [
             # Multi-organ species
             'h_sapiens',
-            #'m_musculus',
-            #'m_murinus',
-            #'d_melanogaster',
-            #'x_laevis',
+            'm_musculus',
+            'm_murinus',
+            'd_melanogaster',
+            'x_laevis',
 
             # Single-organ species
-            #'c_gigas',
-            #'c_hemisphaerica',
-            #'s_pistillata',
-            #'a_queenslandica',
-            #'c_elegans',
-            #'d_rerio',
-            #'h_miamia',
-            #'i_pulchra',
-            #'m_leidyi',
-            #'n_vectensis',
-            #'p_crozieri',
-            #'s_mansoni',
-            #'s_mediterranea',
-            #'s_lacustris',
-            #'s_purpuratus',
-            #'t_adhaerens',
+            'c_gigas',
+            'c_hemisphaerica',
+            's_pistillata',
+            'a_queenslandica',
+            'c_elegans',
+            'd_rerio',
+            'h_miamia',
+            'i_pulchra',
+            'm_leidyi',
+            'n_vectensis',
+            'p_dumerilii',
+            'p_crozieri',
+            's_mansoni',
+            's_mediterranea',
+            's_lacustris',
+            't_adhaerens',
+            'l_minuta',
 
-            #'l_minuta',
-            #'a_thaliana',
-            #'t_aestivum',
+            # TODO: get peptide sequences for these three
+            'a_thaliana',
+            't_aestivum',
+            's_purpuratus',
         ]
 
     for species in species_list:
@@ -172,7 +194,7 @@ if __name__ == '__main__':
 
             if "path_global" in config_mt:
                 print(f"Read full atlas")
-                features = read_features_from_h5ad(config_mt["path_global"], **load_params)
+                features = read_features_from_h5ad(config_mt["path_global"], config_mt, **load_params)
 
             if "path_metadata_global" in config_mt:
                 print("Read global metadata separately")
@@ -191,18 +213,7 @@ if __name__ == '__main__':
                 if "path_global" not in config_mt:
                     tissues = sorted(config_mt["path"].keys())
                 else:
-                    if 'tissues' in config_mt:
-                        tissues = config_mt["tissues"]
-                    else:
-                        if 'tissues' in config_mt['cell_annotations']['rename_dict']:
-                            tissues_raw = adata.obs['tissue'].value_counts().index.tolist()
-                            tdict = config_mt['cell_annotations']['rename_dict']['tissues']
-                            tmap = {t: tdict.get(t, t) for t in tissues_raw}
-                            adata.obs['tissue'] = adata.obs['tissue'].map(tmap)
-                            del tdict, tmap
-
-                        tissues = adata.obs['tissue'].value_counts().index.tolist()
-                        tissues = sorted([t for t in tissues if t != ''])
+                    tissues = ['unused']
 
             tissues = tissues[:args.maxtissues]
 
@@ -212,7 +223,7 @@ if __name__ == '__main__':
 
                 if "path_global" not in config_mt:
                     print(f"Read full atlas for {tissue}")
-                    features_tissue = read_features_from_h5ad(config_mt["path"][tissue], **load_params)
+                    features_tissue = read_features_from_h5ad(config_mt["path"][tissue], config_mt, **load_params)
                 else:
                     print(f'Slice cells for {tissue}')
                     features_tissue = features
@@ -237,5 +248,5 @@ if __name__ == '__main__':
             print('Garbage collection after feature homogenisation')
             gc.collect()
 
-            print('Collect and store feature sequences (peptides)')
+            print('Check feature sequences (peptides)')
             check_feature_sequences(features, species)
