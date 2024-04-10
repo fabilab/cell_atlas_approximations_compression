@@ -44,13 +44,6 @@ if __name__ == '__main__':
         species_list = args.species.split(',')
     else:
         species_list = [
-            # Multi-organ species
-            #'h_sapiens',
-            #'m_musculus',
-            #'m_murinus',
-            #'d_melanogaster',
-            #'x_laevis',
-
             # Single-organ species
             'c_gigas',
             'c_hemisphaerica',
@@ -67,12 +60,20 @@ if __name__ == '__main__':
             's_mansoni',
             's_mediterranea',
             's_lacustris',
-            's_purpuratus',
+            # TODO: missing peptide sequences
+            #'s_purpuratus',
             't_adhaerens',
 
             'l_minuta',
             'a_thaliana',
             't_aestivum',
+
+            # Multi-organ species
+            #'h_sapiens',
+            #'m_musculus',
+            #'m_murinus',
+            #'d_melanogaster',
+            #'x_laevis',
         ]
 
     for species in species_list:
