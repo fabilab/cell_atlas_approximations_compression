@@ -4,7 +4,11 @@ import pandas as pd
 
 
 def homogenise_features(compressed_atlas):
-    """Ensure all tissues use the same features"""
+    """Ensure all tissues use the same features.
+
+    This function takes the union of features across organs and recasts the
+    individual compressed matrices to match.
+    """
     if len(compressed_atlas['tissues']) == 1:
         for tissue, group in compressed_atlas['tissues'].items():
             compressed_atlas['features'] = group.pop('features')

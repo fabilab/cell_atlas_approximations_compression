@@ -1,11 +1,13 @@
 measurement_types: ["gene_expression"]
 
 gene_expression:
-  path: "a_thaliana_root.h5ad"
-  source: "Shahan et al 2022 (https://www.sciencedirect.com/science/article/pii/S1534580722000338)"
+  path:
+    root: "a_thaliana_root.h5ad"
+    shoot: "shoot/a_thaliana_shoot.h5ad"
+  source: "Shahan et al 2022 (https://www.sciencedirect.com/science/article/pii/S1534580722000338) [root], Xu et al 2024 (https://doi.org/10.1101/2024.03.04.583414) [shoot]"
   normalisation: raw
 
-  tissues: ["whole"]
+  tissues: ["root", "shoot"]
   cell_annotations:
     column: "celltype.anno"
     rename_dict:
@@ -14,6 +16,9 @@ gene_expression:
         'quiescent center': 'center'
         'cortex': 'epidermal'
         'endodermis': 'endodermal'
+        'shoot:meristem_epi': 'epimeristem'
+        'shoot:lateral_epi': 'epilateral'
+        'shoot:meristem_nonepi': 'meristem'
     blacklist:
       whole: [
         "unknown",
@@ -25,6 +30,9 @@ cell_annotations:
       'epidermal',
       'endodermal',
       'rootcap',
+      'epimeristem',
+      'proliferating_epi',
+      'epilateral',
     ]
 
     'mesenchymal': [
@@ -33,6 +41,9 @@ cell_annotations:
       'trichoblast',
       'pericycle',
       'procambium',
+      'lateral',
+      'companion',
+      'sieve',
     ]
 
     'endothelial': [
@@ -42,6 +53,10 @@ cell_annotations:
     
     'other': [
       'center',
+      'meristem',
+      'trichome',
+      'proliferating_nonepi',
+      'rib',
     ]
 
   supertype_order: [
