@@ -89,6 +89,10 @@ if __name__ == '__main__':
         if remove_old:
             fn_out_final = fn_out
             fn_out = pathlib.Path(str(fn_out_final)+'.new')
+            if fn_out.exists():
+                os.remove(fn_out)
+        else:
+            fn_out_final = None
 
         # Iterate over gene expression, chromatin accessibility, etc.
         for measurement_type in config["measurement_types"]:
@@ -269,6 +273,7 @@ if __name__ == '__main__':
                         measurement_type,
                         species,
                         fn_out,
+                        fn_compressed_backup=fn_out_final or None,
                     )
 
                     # Do not store gene/protein embeddings by default, they are added later on

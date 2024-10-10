@@ -19,6 +19,8 @@ gene_expression:
         'shoot:meristem_epi': 'epimeristem'
         'shoot:lateral_epi': 'epilateral'
         'shoot:meristem_nonepi': 'meristem'
+        'shoot:proliferating_nonepi': 'proliferating nonepi'
+        'shoot:proliferating_epi': 'proliferating epi'
     blacklist:
       whole: [
         "unknown",
@@ -31,7 +33,7 @@ cell_annotations:
       'endodermal',
       'rootcap',
       'epimeristem',
-      'proliferating_epi',
+      'proliferating epi',
       'epilateral',
     ]
 
@@ -55,7 +57,7 @@ cell_annotations:
       'center',
       'meristem',
       'trichome',
-      'proliferating_nonepi',
+      'proliferating nonepi',
       'rib',
     ]
 

@@ -19,6 +19,7 @@ def collect_store_feature_sequences(
     fn_out,
     compression=22, 
     min_fraction=0.3,
+    fn_compressed_backup=None,
     ):
     if compression:
         import hdf5plugin
@@ -46,6 +47,11 @@ def collect_store_feature_sequences(
     if fn_peptides.exists():
         path = fn_peptides
         feature_type = 'protein'
+    elif fn_compressed_backup is not None:
+        print('peptide file not found, using old approximation as a backup')
+        path = fn_compressed_backup
+        feature_type = 'protein'
+        fun = _collect_store_feature_sequences_bulk_backup
     else:
         raise IOError(
             f'peptide file not found for species: {species}',
@@ -65,6 +71,57 @@ def collect_store_feature_sequences(
         comp_kwargs=comp_kwargs,
         min_fraction=min_fraction,
     )
+
+
+def _collect_store_feature_sequences_bulk_backup(
+    config_mt,
+    path,
+    feature_type,
+    features,
+    measurement_type,
+    species,
+    fn_out,
+    comp_kwargs,
+    min_fraction,
+    ):
+    """Collect sequences of features and store to file, all at once (better comp)."""
+    import hdf5plugin
+
+    # 1. Collect sequences
+    seqs = {fea: '' for fea in features}
+    with h5py.File(path) as f:
+        group = f['measurements']['gene_expression']
+        for gene, seq in zip(group['var_names'].asstr(), group['feature_sequences']['sequences'].asstr()):
+            # Remove stop codon from old versions
+            seq = seq.rstrip('*')
+            if gene in features:
+                seqs[gene] = seq
+
+    seqs = pd.Series(seqs).loc[features]
+
+    # 2. Verify that sequences got written
+    frac_nonempty = (seqs != '').mean()
+    if frac_nonempty < min_fraction:
+        pct_nonempty = int(100 * frac_nonempty)
+        min_pct = int(100 * min_fraction)
+        import ipdb; ipdb.set_trace()
+        raise ValueError(
+            f'Only {pct_nonempty}% (< {min_pct}%) of the features had a sequence',
+        )
+    pct_nonempty = int(100 * frac_nonempty)
+    print(f'Percentage of features with known sequence: {pct_nonempty}%')
+
+    # 3. Store sequences
+    with h5py.File(fn_out, 'a') as h5_data:
+        me = h5_data['measurements'][measurement_type]
+        group = me.create_group('feature_sequences')
+        group.attrs["type"] = feature_type
+
+        # Bulk strings seem to be compresed better
+        group.create_dataset(
+            "sequences", data=seqs.values.astype('S'),
+            **comp_kwargs,
+        )
 
 
 def _collect_store_feature_sequences_bulk(
