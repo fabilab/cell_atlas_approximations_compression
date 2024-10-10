@@ -1,0 +1,96 @@
+measurement_types: ["gene_expression"]
+
+gene_expression:
+  path:
+    seedling: "seedling/z_mays_seedling.h5ad"
+    eartip: "eartip/z_mays_eartip.h5ad"
+  source: "Marand et al 2021 (https://www.cell.com/cell/pdf/S0092-8674(21)00493-1.pdf) [seedling], Xu et al 2024 (https://doi.org/10.1101/2024.03.04.583414) [eartip]"
+  normalisation: raw
+
+  tissues: ["seedling", "eartip"]
+  cell_annotations:
+    column: "celltype"
+    rename_dict:
+      cell_types:
+        'parenchyma': 'parenchyma'
+        'Vascular': 'vascular'
+        'mesophyll': 'mesophyll'
+        'guard_cell': 'guard'
+        'procambial_meristem': 'procambium'
+        'bundle_sheath': 'sheath'
+        'epidermal': 'epidermal'
+        'stomatal_precursor': 'stomatal'
+        'protophloem_se': 'protophloem'
+        'protoxylem': 'protoxylem'
+        'metaxylem': 'metaxylem'
+        'metaphloem_se': 'metaphloem'
+        'xylem_parenchyma': 'xylem'
+        'phloem_parenchyma': 'phloem'
+        'cortex': 'epidermal'
+        'endodermis': 'endodermal'
+        'eartip:meristem_epi': 'epimeristem'
+        'eartip:lateral_epi': 'epilateral'
+        'eartip:meristem_nonepi': 'meristem'
+        'eartip:proliferating_nonepi': 'proliferating nonepi'
+        'eartip:proliferating_epi': 'proliferating epi'
+    blacklist:
+      seedling: [
+        "unknown",
+      ]
+
+cell_annotations:
+  cell_supertypes:
+    'epithelial': [
+      'epidermal',
+      'endodermal',
+      'rootcap',
+      'epimeristem',
+      'proliferating epi',
+      'epilateral',
+      'adaxial',
+      'sheath',
+    ]
+
+    'mesenchymal': [
+      'columella',
+      'atrichoblast',
+      'trichoblast',
+      'pericycle',
+      'procambium',
+      'lateral',
+      'companion',
+      'sieve',
+      'pith',
+      'parenchyma',
+      'mesophyll',
+    ]
+
+    'endothelial': [
+      'vascular',
+      'xylem',
+      'protoxylem',
+      'metaxylem',
+      'phloem',
+      'protophloem',
+      'metaphloem',
+    ]
+    
+    'other': [
+      'inflorescence',
+      'spikelet',
+      'base',
+      'center',
+      'meristem',
+      'trichome',
+      'proliferating nonepi',
+      'rib',
+      'guard',
+      'stomatal',
+    ]
+
+  supertype_order: [
+    'epithelial',
+    'endothelial',
+    'mesenchymal',
+    'other',
+  ]
