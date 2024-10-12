@@ -2,7 +2,7 @@ measurement_types: ["gene_expression"]
 
 gene_expression:
   path:
-    root: "a_thaliana_root.h5ad"
+    root: "root/a_thaliana_root.h5ad"
     shoot: "shoot/a_thaliana_shoot.h5ad"
   source: "Shahan et al 2022 (https://www.sciencedirect.com/science/article/pii/S1534580722000338) [root], Xu et al 2024 (https://doi.org/10.1101/2024.03.04.583414) [shoot]"
   normalisation: raw
