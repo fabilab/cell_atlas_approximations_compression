@@ -17,12 +17,14 @@ class AtlasApproxStorer:
     def __init__(
         self,
         quantisation,
+        quantisation_bins,
         avg_dtype,
         add_kwargs,
         comp_kwargs,
         measurement_type,
     ):
         self.quantisation = quantisation
+        self.quantisation_bins = quantisation_bins
         self.avg_dtype = avg_dtype
         self.add_kwargs = add_kwargs
         self.comp_kwargs = comp_kwargs
@@ -41,6 +43,7 @@ class AtlasApproxStorer:
         # Average expression
         avg = comp_data["avg"]
         if self.quantisation:
+            bins = self.quantisation_bins
             # pd.cut wants one dimensional arrays so we ravel -> cut -> reshape
             avg_vals = (
                 pd.cut(avg.values.ravel(), bins=bins, labels=False)
@@ -209,9 +212,11 @@ def store_compressed_atlas(
     else:
         avg_dtype = "f4"
         quantisation = False
+        bins = None
 
     storer = AtlasApproxStorer(
         quantisation=quantisation,
+        quantisation_bins=bins,
         avg_dtype=avg_dtype,
         add_kwargs=add_kwargs,
         comp_kwargs=comp_kwargs,

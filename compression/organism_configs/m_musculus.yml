@@ -184,6 +184,7 @@ cell_annotations:
       'regulatory t cell': 'Treg'
       'smooth muscle cell of the pulmonary artery': 'vascular smooth muscle'
       'plasmacytoid dendritic cell': 'plasmacytoid'
+      'plasma cell': 'plasma'
       'pericyte cell': 'pericyte'
       'dendritic cell': 'dendritic'
       'endothelial cell of lymphatic vessel': 'lymphatic'
@@ -277,7 +278,7 @@ cell_annotations:
       'late pro-B',
       'immature B',
       'B',
-      'plasma cell',
+      'plasma',
       'thymocyte',
       'T',
       'Treg',
