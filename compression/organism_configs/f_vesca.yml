@@ -1,0 +1,51 @@
+measurement_types: ["gene_expression"]
+
+gene_expression:
+  path: "f_vesca.h5ad"
+  source: "Bai et al 2022 (https://doi.org/10.1093/hr/uhab055)"
+  normalisation: "raw"
+
+  tissues: ["leaf"]
+  cell_annotations:
+    column: "Celltype"
+    rename_dict:
+      cell_types:
+        'adaxial epidermis': 'epidermal'
+        'xylem parenchyma': 'parenchyma'
+        'abaxial epidermis': 'epidermal'
+        'meristematic cell': 'meristem'
+        'hydathodes': 'epithem'
+
+    blacklist:
+      leaf: [
+        "unknow",
+      ]
+
+cell_annotations:
+  cell_supertypes:
+    'epithelial': [
+      'epidermal',
+      'epithem',
+    ]
+
+    'mesenchymal': [
+      'mesophyll',
+      'parenchyma',
+    ]
+
+    'endothelial': [
+      'xylem',
+      'phloem',
+    ]
+    
+    'other': [
+      'cortex',
+      'meristem',
+    ]
+
+  supertype_order: [
+    'epithelial',
+    'endothelial',
+    'mesenchymal',
+    'other',
+  ]

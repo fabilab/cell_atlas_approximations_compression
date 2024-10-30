@@ -1,0 +1,52 @@
+measurement_types: ["gene_expression"]
+
+gene_expression:
+  path: "o_sativa.h5ad"
+  source: "Zhang et al 2021 (https://doi.org/10.1038/s41467-021-22352-4)"
+  normalisation: raw
+
+  tissues: ["root"]
+  cell_annotations:
+    column: "celltype"
+    rename_dict:
+      cell_types:
+        'exodermis': 'exodermal'
+        'endodermis': 'endodermal'
+    blacklist:
+      root: [
+        "undefined",
+      ]
+
+cell_annotations:
+  cell_supertypes:
+    'epithelial': [
+      'exodermal',
+      'endodermal',
+      'rootcap',
+      'emc',
+    ]
+
+    'mesenchymal': [
+      'atrichoblast',
+      'trichoblast',
+      'pericycle',
+      'sclerenchyma',
+    ]
+
+    'endothelial': [
+      'vascular',
+      'xylem',
+      'phloem',
+    ]
+    
+    'other': [
+      'cortex',
+      'meristem',
+    ]
+
+  supertype_order: [
+    'epithelial',
+    'endothelial',
+    'mesenchymal',
+    'other',
+  ]
