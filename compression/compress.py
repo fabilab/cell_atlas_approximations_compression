@@ -301,13 +301,14 @@ if __name__ == "__main__":
                         fn_compressed_backup=fn_out_final or None,
                     )
 
-                    # Do not store gene/protein embeddings by default, they are added later on
+                    # Do not store gene/protein embeddings for now, they are all together
+                    # in a separate HDF5 file
                     if False:
-                        print("Garbage collection before ESM embeddings")
+                        print("Garbage collection before ESM/PROST embeddings")
                         gc.collect()
 
                         if measurement_type == "gene_expression":
-                            print("Collect and store ESM embeddings")
+                            print("Collect and store ESM/PROST embeddings")
                             store_gene_embeddings(
                                 config_mt,
                                 species,

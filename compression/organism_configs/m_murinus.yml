@@ -196,6 +196,7 @@ cell_annotations:
       'ciliated cell': 'ciliated'
       'lung neuroendocrine cell': 'neuroendocrine'
       'epithelial cell of uterus': 'epithelial'
+      'plasma cell': 'plasma'
       'unknown': ''
 
   blacklist:
@@ -230,7 +231,7 @@ cell_annotations:
       'erythrocyte',
       'platelet',
       'B',
-      'plasma cell',
+      'plasma',
       'T',
       'NK',
       'plasmacytoid',

@@ -17,7 +17,7 @@ def store_gene_embeddings(
     else:
         comp_kwargs = {}
 
-    fn_in = '../data/esm_embeddings/embeddings_all.h5'
+    fn_in = '../data/esm/embeddings/embeddings_all.h5'
     with h5py.File(fn_in) as embs:
         features_emb = embs[species]['features'].asstr()[:]
         embeddings = embs[species]['embeddings'][:, :]
