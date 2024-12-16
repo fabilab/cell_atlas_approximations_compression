@@ -43,6 +43,9 @@ def load_config(species):
         if "filter_cells" not in config_mt:
             config_mt["filter_cells"] = {}
 
+        # NOTE: These could be defaulted to None, but this way we at least get an idea about what
+        # kinds of data structures we are talking about. Not a good substitute for proper
+        # documentation, I know.
         if "require_subannotation" not in config_mt["cell_annotations"]:
             config_mt["cell_annotations"]["require_subannotation"] = []
 
@@ -51,6 +54,10 @@ def load_config(species):
 
         if "blacklist" not in config_mt["cell_annotations"]:
             config_mt["cell_annotations"]["blacklist"] = {}
+
+        if "tissue_restricted" not in config_mt["cell_annotations"]:
+            config_mt["cell_annotations"]["tissue_restricted"] = {}
+        # END OF NOTE
 
         celltype_order = []
         for supertype in config_mt["cell_annotations"]["supertype_order"]:

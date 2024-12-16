@@ -234,6 +234,7 @@ if __name__ == "__main__":
                         config_mt["cell_annotations"]["rename_dict"],
                         config_mt["cell_annotations"]["require_subannotation"],
                         blacklist=config_mt["cell_annotations"]["blacklist"],
+                        tissue_restricted=config_mt["cell_annotations"]["tissue_restricted"],
                         subannotation_kwargs=config_mt["cell_annotations"][
                             "subannotation_kwargs"
                         ],
