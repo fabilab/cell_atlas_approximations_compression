@@ -1,7 +1,10 @@
 import pathlib
 import yaml
 
-from .paths import root_repo_folder
+from .paths import (
+    root_repo_folder,
+    raw_atlas_folder,
+)
 
 
 def load_config(species):
@@ -29,7 +32,7 @@ def load_config(species):
             config_mt["path"] = {t: config_mt["path"] for t in config_mt["tissues"]}
 
         # Use absolute paths
-        root_fdn = root_repo_folder / 'data' / 'full_atlases' / mt / species
+        root_fdn = raw_atlas_folder / mt / species
         for key in ["path_global", "path_metadata_global"]:
             if key in config_mt:
                 config_mt[key] = root_fdn / config_mt[key]

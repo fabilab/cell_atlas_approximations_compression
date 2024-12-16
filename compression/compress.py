@@ -21,6 +21,7 @@ from utils import (
     load_config,
     root_repo_folder,
     output_folder,
+    curated_atlas_folder,
     postprocess_feature_names,
     filter_cells,
     normalise_counts,
@@ -236,6 +237,11 @@ if __name__ == "__main__":
                         subannotation_kwargs=config_mt["cell_annotations"][
                             "subannotation_kwargs"
                         ],
+                    )
+
+                    print("Store curated version of full atlas, for comparison")
+                    adata_tissue.write(
+                        curated_atlas_folder / f"{species}_{tissue}_{measurement_type}.h5ad",
                     )
 
                     print("Compress atlas")

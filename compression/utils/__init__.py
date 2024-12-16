@@ -15,6 +15,8 @@ import scanpy as sc
 from .paths import (
     root_repo_folder,
     output_folder,
+    raw_atlas_folder,
+    curated_atlas_folder,
 )
 from .config import load_config
 from .preprocess import (
