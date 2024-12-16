@@ -1,6 +1,8 @@
 import gc
+from typing import Sequence, Union
 import numpy as np
 import pandas as pd
+import anndata
 import scanpy as sc
 
 
@@ -202,16 +204,34 @@ def subannotate(adata,
 
 
 def correct_annotations(
-    adata,
-    column,
-    species,
-    tissue,
-    rename_dict,
-    require_subannotation,
-    blacklist=None,
-    subannotation_kwargs=None,
+    adata : anndata.AnnData,
+    column : str,
+    species : str,
+    tissue : str,
+    rename_dict : dict,
+    require_subannotation : Sequence[str],
+    blacklist : Union[None, dict] = None,
+    tissue_restricted : Union[None, dict] = None,
+    subannotation_kwargs : Union[None, dict] = None,
 ):
-    '''Correct cell types in each tissue according to known dict'''
+    '''Correct cell types in each tissue according to known dict.
+
+    This function also takes into account blacklists, which are on a per-tissue
+    basis, and can summon lower-level functions to run on-the-fly subannotations
+    if the current cell annotation is too generic (e.g. "endothelial").
+
+    There is also a special argument called "tissue_restricted" which specifies
+    cell types that are restricted to one or a few tissues. It's basically a
+    per-tissue whitelist for things like pancreatic beta cells or sperm cells.
+    The way this works is by blacklisting those cell types in all tissues except
+    the chosen ones.
+
+    NOTE: the order of operations is important, because renaming before blacklisting
+    is not the same as vice versa.
+
+    Args:
+        adata: AnnData object with
+    '''
     # If a list is given, take the first one you find or fail
     if not isinstance(column, str):
         columns = column
@@ -234,12 +254,26 @@ def correct_annotations(
 
     if blacklist is None:
         blacklist = {}
+    if tissue not in blacklist:
+        blacklist[tissue] = []
     if subannotation_kwargs is None:
         subannotation_kwargs = {}
 
     celltypes_new = np.asarray(adata.obs[column + '_lowercase']).copy()
 
-    # Exclude blacklisted
+    # Check tissue-restricted cell types first
+    # NOTE: these cell types are BEFORE renaming, see the blacklist NOTE for details as of
+    # why that is a good (but painful) idea.
+    if tissue_restricted is not None:
+        for ct_restricted, tissues_allowed in tissue_restricted.items():
+            if (tissue not in tissues_allowed) and (ct_restricted not in blacklist[tissue]):
+                blacklist[tissue].append(ct_restricted)
+
+    # Exclude blacklisted FIRST (!)
+    # NOTE: This happens before reannotation even though that makes it annoying to type out
+    # in the organism config file for a good reason, namely that we want to have very fine
+    # control over what we blacklist and stay as close to the reputable data source as
+    # possible to fend off criticism.
     if tissue in blacklist:
         for ctraw in blacklist[tissue]:
             celltypes_new[celltypes_new == ctraw] = ''
