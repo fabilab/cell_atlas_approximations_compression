@@ -142,7 +142,10 @@ def _compress_neighborhoods(
         adata.obsm[f'X_{emb_key}'] = points
 
         # Back to cptt or equivalent for storage
-        adata.X.data = np.expm1(adata.X.data)
+        if isinstance(adata.X, np.ndarray):
+            adata.X[:, :] = np.expm1(adata.X)
+        else:
+            adata.X.data = np.expm1(adata.X.data)
     ##############################################
 
     points = adata.obsm[f'X_{emb_key}']
