@@ -8,6 +8,8 @@ gene_expression:
   feature_sequences:
     path: 'gene_sequences.fasta.gz'
     type: 'cDNA'
+  feature_name_postprocess:
+    use_column: "symbol"
   tissues: ["whole"]
   cell_annotations:
     column: "cell.type"

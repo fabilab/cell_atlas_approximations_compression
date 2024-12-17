@@ -7,7 +7,11 @@ import scanpy as sc
 
 
 def postprocess_feature_names(adata, config_mt):
-    """Postprocess the names of features, e.g. to match standard names on GenBank."""
+    """Postprocess the names of features, e.g. to match standard names on GenBank.
+
+    This can also set another column of adata.var as the feature names.
+    """
+    
     if "feature_name_postprocess" not in config_mt:
         return adata
 
@@ -27,6 +31,14 @@ def postprocess_feature_names(adata, config_mt):
     if "substitute_final_uderscore" in config_mt["feature_name_postprocess"]:
         sub = config_mt["feature_name_postprocess"]["substitute_final_uderscore"]
         adata.var_names = adata.var_names.str.replace('_([^_]+)$', r'.\1', regex=True)
+
+    if "use_column" in config_mt["feature_name_postprocess"]:
+        varnames_column = config_mt["feature_name_postprocess"]["use_column"]
+        # Check that the new features are unique
+        if adata.var[varnames_column].value_counts().iloc[0] != 1:
+            print("Feature name column contains nonunique entries.")
+            import ipdb; ipdb.set_trace()
+        adata.var_names = adata.var[varnames_column]
 
     return adata
 
