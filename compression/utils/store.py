@@ -84,6 +84,7 @@ class AtlasApproxStorer:
         # Average expression
         avg = neid["avg"]
         if self.quantisation:
+            bins = self.quantisation_bins
             # pd.cut wants one dimensional arrays so we ravel -> cut -> reshape
             avg_vals = (
                 pd.cut(avg.values.ravel(), bins=bins, labels=False)

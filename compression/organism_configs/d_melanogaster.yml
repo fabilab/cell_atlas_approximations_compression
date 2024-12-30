@@ -198,6 +198,10 @@ cell_annotations:
       'gustatory receptor neuron': 'neuron'
       'nociceptive neuron': 'neuron'
 
+  tissue_restricted:
+    'adult fat body': ['fat']
+    'fat cell': ['fat']
+
   blacklist:
     fat: [
       'ovary cell',

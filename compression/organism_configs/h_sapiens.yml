@@ -505,151 +505,108 @@ cell_annotations:
       'parietal cell': 'parietal'
       'thyroid follicular cell': 'thyrocyte'
 
+  tissue_restricted:
+    'pancreatic alpha cell': ['pancreas']
+    'pancreatic beta cell': ['pancreas']
+    'pancreatic pp cell': ['pancreas']
+    'pancreatic delta cell': ['pancreas']
+    'pancreatic stellate cell': ['pancreas']
+    'ductal cell (pancreatic)': ['pancreas']
+    'pancreatic acinar cell': ['pancreas']
+    'pancreatic delta,gamma cell': ['pancreas']
+    'alveolar type 1 (at1) cell': ['lung']
+    'alveolar type 2 (at2) cell': ['lung']
+    'alverolar type 2,immune': ['lung']
+    'luteal cell (ovarian)': ['ovary']
+    'hepatocyte': ['liver']
+    'mammary luminal epithelial cell 2': ['mammary']
+    'basal epithelial (mammary)': ['mammary']
+    'small intestinal enterocyte': ['gut', 'colon']
+    'chief cell': ['stomach']
+
   blacklist:
     'adrenal': [
-      'luteal cell (ovarian)',
       'smooth muscle (vaginal)',
       'vascular smooth muscle 2',
       'cns,enteric neuron',
       'smooth muscle (general)',
-      'beta',
     ]
 
     'brain': [
       'peripheral nerve stromal',
       'smooth muscle (vaginal)',
-      'beta',
     ]
 
     'colon': [
-      'mammary luminal epithelial cell 2',
-      'pancreatic delta,gamma cell',
-      'ductal cell (pancreatic)',
-      'chief cell',
-      'luteal cell (ovarian)',
-      'beta',
     ]
 
     'esophagus': [
-        'airway goblet cell',
-        'peripheral nerve stromal',
-        'mammary luminal epithelial cell 2',
-        'basal epithelial (mammary)',
-        'thyroid follicular cell',
-        'pancreatic acinar cell',
-        'luteal cell (ovarian)',
-      'beta',
+      'airway goblet cell',
+      'peripheral nerve stromal',
+      'thyroid follicular cell',
     ]
 
     'eye': [
       'endothelial cell',
-      'beta',
     ]
 
     'fat': [
-      'alverolar type 2,immune',
       'peripheral nerve stromal',
-      'pancreatic acinar cell',
-      'ductal cell (pancreatic)',
-      'chief cell',
-      'beta',
     ]
 
     'gut': [
       'duodenum glandular cell',
-      'beta',
     ]
 
     'heart': [
       'peripheral nerve stromal',
-      'ductal cell (pancreatic)',
-      'mammary luminal epithelial cell 2',
-      'pancreatic acinar cell',
-      'alveolar type 2 (at2) cell',
       'thyroid follicular cell',
-      'alveolar type 1 (at1) cell',
-      'luteal cell (ovarian)',
-      'beta',
-      'hepatocyte',
     ]
 
     'liver': [
-      'ductal cell (pancreatic)',
-      'mammary luminal epithelial cell 2',
-      'beta',
     ]
 
     'lung': [
-      'chief cell',
-      'luteal cell (ovarian)',
-      'mammary luminal epithelial cell 2',
-      'ductal cell (pancreatic)',
-      'small intestinal enterocyte',
-      'beta',
     ]
 
     'mammary': [
-      'ductal cell (pancreatic)',
-      'beta',
     ]
 
     'muscle': [
       'peripheral nerve stromal',
-      'ductal cell (pancreatic)',
-      'luteal cell (ovarian)',
-      'beta',
     ]
 
     'nerve': [
-      'ductal cell (pancreatic)',
-      'luteal cell (ovarian)',
-      'beta',
     ]
 
     'ovary': [
-      'ductal cell (pancreatic)',
-      'beta',
     ]
 
     'pancreas': [
-      'luteal cell (ovarian)',
     ]
 
     'prostate': [
       'sperm',
-      'beta',
     ]
 
     'salivary': [
       'salivary gland cell',
-      'beta',
     ]
 
     'skin': [
-      'luteal cell (ovarian)',
       'peripheral nerve stromal',
-      'beta',
     ]
 
     'stomach': [
-      'pancreatic delta,gamma cell',
-      'pancreatic acinar cell',
-      'beta',
     ]
 
     'thyroid': [
-      'pancreatic delta,gamma cell',
-      'beta',
     ]
 
     'uterus': [
-      'luteal cell (ovarian)',
-      'beta',
     ]
  
     'vagina': [
-      'luteal cell (ovarian)',
-      'beta',
     ]
 
   cell_supertypes:

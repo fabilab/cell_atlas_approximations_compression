@@ -48,11 +48,13 @@ if __name__ == "__main__":
             # Single-organ species
             "c_gigas",
             "c_hemisphaerica",
+            "c_intestinalis",
             "s_pistillata",
             "a_queenslandica",
             "c_elegans",
             "d_rerio",
             "h_miamia",
+            "h_vulgaris",
             "i_pulchra",
             "m_leidyi",
             "n_vectensis",
@@ -61,19 +63,20 @@ if __name__ == "__main__":
             "s_mansoni",
             "s_mediterranea",
             "s_lacustris",
-            # TODO: missing peptide sequences
-            #'s_purpuratus',
+            's_purpuratus',
             "t_adhaerens",
             "l_minuta",
             "a_thaliana",
             "t_aestivum",
             "z_mays",
+            "f_vesca",
+            "o_sativa",
             # Multi-organ species
-            #'h_sapiens',
-            #'m_musculus',
-            #'m_murinus',
-            #'d_melanogaster',
-            #'x_laevis',
+            'h_sapiens',
+            'm_musculus',
+            'm_murinus',
+            'd_melanogaster',
+            'x_laevis',
         ]
 
     for species in species_list:
@@ -106,7 +109,7 @@ if __name__ == "__main__":
                 load_params.update(config_mt["load_params"])
 
             if "path_global" in config_mt:
-                print(f"Read full atlas")
+                print(f"Read raw atlas")
                 adata = anndata.read_h5ad(config_mt["path_global"], **load_params)
 
             if "path_metadata_global" in config_mt:
@@ -192,7 +195,7 @@ if __name__ == "__main__":
                     meta_tissue = meta.loc[meta["tissue"] == tissue]
 
                 if "path_global" not in config_mt:
-                    print(f"Read full atlas for {tissue}")
+                    print(f"Read raw atlas for {tissue}")
                     adata_tissue = anndata.read_h5ad(
                         config_mt["path"][tissue], **load_params
                     )
