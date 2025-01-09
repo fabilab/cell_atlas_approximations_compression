@@ -165,13 +165,24 @@ def subannotate(adata,
 
     adatam = adata[:, genes].copy()
 
-    # No need for PCA because the number of genes is small
+    # NOTE: No need for PCA because the number of genes is small
+    # In fact, remove preexisting PCA data
+    adatam.obsm.pop('X_pca')
 
-    # Get neighbors
-    sc.pp.neighbors(adatam)
+    # Remove previous neighborhood graph
+    for key in ['connectivities', 'distances']:
+        if key in adatam.obsp:
+            adatam.obsp.pop(key)
+
+    # Get neighbors: it sometimes fail because of currently unknown reasons, but it works
+    # with fewer neighbors. Probably a bug in the library dealing with corner cases.
+    try:
+        sc.pp.neighbors(adatam)
+    except ValueError:
+        sc.pp.neighbors(adatam, n_neighbors=10)
 
     # Get communities
-    sc.tl.leiden(adatam)
+    sc.tl.leiden(adatam, flavor="igraph", n_iterations=2)
 
     adata.obs['subleiden'] = adatam.obs['leiden']
     sc.tl.rank_genes_groups(
@@ -285,7 +296,8 @@ def correct_annotations(
     # NOTE: This happens before reannotation even though that makes it annoying to type out
     # in the organism config file for a good reason, namely that we want to have very fine
     # control over what we blacklist and stay as close to the reputable data source as
-    # possible to fend off criticism.
+    # possible to fend off criticism. The ONLY difference from raw annotations is lowercasing
+    # which is done above (celltypes_new definition).
     if tissue in blacklist:
         for ctraw in blacklist[tissue]:
             celltypes_new[celltypes_new == ctraw] = ''
