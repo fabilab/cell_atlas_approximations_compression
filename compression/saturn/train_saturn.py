@@ -24,6 +24,7 @@ if __name__ == "__main__":
     parser.add_argument('--n-hvg', default=2000, help="Number of highly variable genes")
     parser.add_argument('--n-epochs', default=50, help="Number of epochs in metric learning")
     parser.add_argument('--n-pretrain-epochs', default=100, help="Number of epochs in pretraining")
+    parser.add_argument('--leaveout', default=None, type=str, help="Leave out this species for testing")
     args = parser.parse_args()
 
     fasta_root_folder = pathlib.Path("/mnt/data/projects/cell_atlas_approximations/reference_atlases/data/saturn/peptide_sequences/")
@@ -31,12 +32,16 @@ if __name__ == "__main__":
     embeddings_summary_fdn = embedding_root_fdn.parent / "esm_embeddings_summaries/"
     h5ad_fdn = embeddings_summary_fdn.parent / "h5ads"
     output_fdn = embeddings_summary_fdn.parent / f"output_nmacro{args.n_macrogenes}_nhvg{args.n_hvg}_epochs_p{args.n_pretrain_epochs}_m{args.n_epochs}"
+    if args.leaveout is not None:
+        output_fdn = output_fdn.parent / f"{output_fdn.stem}_leaveout_{args.leaveout}"
     os.makedirs(output_fdn, exist_ok=True)
 
     # Build the CSV used by SATURN to connect the species
     sample_dict = {}
     for h5ad_fn in h5ad_fdn.iterdir():
         species = h5ad_fn.stem
+        if (args.leaveout is not None) and (species == args.leaveout):
+            continue
         print(species)
         embedding_summary_fn = embeddings_summary_fdn / f"{species}_gene_all_esm1b.pt"
         if not embedding_summary_fn.exists():

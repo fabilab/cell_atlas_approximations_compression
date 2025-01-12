@@ -16,11 +16,13 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Train SATURN on the atlasapprox data.")
     parser.add_argument('--dry', action="store_true", help="Dry run")
     parser.add_argument('--n-macrogenes', default=6, help="Number of macrogenes (only used to find the model)")
-    parser.add_argument('--n-hvg', default=12, help="Number of highly variable genes")
+    parser.add_argument('--n-hvg', default=13, help="Number of highly variable genes")
     parser.add_argument('--n-epochs', default=1, help="Number of epochs in metric learning")
     parser.add_argument('--n-pretrain-epochs', default=1, help="Number of epochs in pretraining")
     parser.add_argument('--species', type=str, help="Infer embedding for data of this species", default="a_queenslandica")
     parser.add_argument('--train', action='store_true', help="Whether to train the transfer model")
+    parser.add_argument('--leaveout', type=str, default=None, help="Use leaveout-traned model without this species for inference.")
+    parser.add_argument('--secondary-analysis', action='store_true', help="Perform secondary analysis")
     args = parser.parse_args()
 
     fasta_root_folder = pathlib.Path("/mnt/data/projects/cell_atlas_approximations/reference_atlases/data/saturn/peptide_sequences/")
@@ -28,6 +30,8 @@ if __name__ == "__main__":
     embeddings_summary_fdn = embedding_root_fdn.parent / "esm_embeddings_summaries/"
     h5ad_fdn = embeddings_summary_fdn.parent / "h5ads"
     training_output_fdn = embeddings_summary_fdn.parent / f"output_nmacro{args.n_macrogenes}_nhvg{args.n_hvg}_epochs_p{args.n_pretrain_epochs}_m{args.n_epochs}"
+    if args.leaveout is not None:
+        training_output_fdn = training_output_fdn.parent / f"{training_output_fdn.stem}_leaveout_{args.leaveout}"
     centroids_fn = training_output_fdn / "centroids.pkl"  # This is temp output to speed up later iterations (kmeans is costly, apparently)
     pretrain_model_fn = training_output_fdn /"pretrain_model.model"
     metric_model_fn = training_output_fdn /"metric_model.model"
@@ -92,7 +96,72 @@ if __name__ == "__main__":
         call += [
             '--train',
             f'--trained_adata_path={trained_adata_path}',
+            '--epochs=10',
         ]
     print(" ".join(call))
     if not args.dry:
         sp.run(" ".join(call), shell=True, check=True)
+
+        if args.secondary_analysis:
+            print("Begin secondary analysis")
+            import numpy as np
+            import anndata
+            import scanpy as sc
+            import matplotlib.pyplot as plt
+            import seaborn as sns
+
+            for result_h5ad in output_fdn.iterdir():
+                if args.train and str(result_h5ad).endswith('finetuned.h5ad'):
+                    break
+                elif (not args.train) and str(result_h5ad).endswith('zeroshot.h5ad'):
+                    break
+            else:
+                raise IOError("Inference output h5ad file not found")
+            
+            print("Load h5ad for inference and training")
+            adata_inf = anndata.read_h5ad(result_h5ad)
+            adata_train = anndata.read_h5ad(trained_adata_path)
+
+            print("Limit training data to the guide/closest species")
+            adata_train = adata_train[adata_train.obs["species"] == adata_inf.uns["guide_species"]]
+            adata = anndata.concat([adata_inf, adata_train])
+
+            print("Now we can make obs unique")
+            adata.obs_names_make_unique()
+
+            print("PCA")
+            sc.pp.pca(adata)
+
+            print("KNN")
+            sc.pp.neighbors(adata)
+
+            print("UMAP")
+            sc.tl.umap(adata, n_components=2)
+
+            print("Standardise some cell type names and set new column")
+            def mapfun(ct):
+                return {
+                    "filament": "filamentous",
+                    "glia": "glial",
+                    "parenchyma": "parenchymal",
+                }.get(ct, ct)
+            adata.obs["cell_type"] = pd.Categorical(adata.obs["ref_labels"].astype(str).map(mapfun))
+
+
+            print("Visualise")
+            plt.ion()
+            plt.close('all')
+
+            sc.pl.umap(adata, color="species", title="Species", add_outline=True, size=20)
+            fig = plt.gcf()
+            fig.set_size_inches(9, 5)
+            fig.tight_layout()  
+
+            cell_types = np.sort(adata.obs["cell_type"].unique())
+            colors = sns.color_palette('husl', n_colors=len(cell_types))
+            palette = dict(zip(cell_types, colors))
+            sc.pl.umap(adata, color="cell_type", title="Cell Type", add_outline=True, size=15, palette=dict(zip(cell_types, colors)))
+            fig3 = plt.gcf()
+            fig3.set_size_inches(17, 9.8)
+            fig3.axes[0].legend(ncol=5, fontsize=6, bbox_to_anchor=(1,1), bbox_transform=fig3.axes[0].transAxes)
+            fig3.tight_layout() 
