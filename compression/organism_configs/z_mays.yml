@@ -12,7 +12,7 @@ gene_expression:
     column: "celltype"
     rename_dict:
       cell_types:
-        'parenchyma': 'parenchyma'
+        'parenchyma': 'parenchymal'
         'Vascular': 'vascular'
         'mesophyll': 'mesophyll'
         'guard_cell': 'guard'
@@ -40,7 +40,7 @@ gene_expression:
 
 cell_annotations:
   cell_supertypes:
-    'epithelial': [
+    'other': [
       'epidermal',
       'endodermal',
       'rootcap',
@@ -49,9 +49,6 @@ cell_annotations:
       'epilateral',
       'adaxial',
       'sheath',
-    ]
-
-    'mesenchymal': [
       'columella',
       'atrichoblast',
       'trichoblast',
@@ -61,11 +58,8 @@ cell_annotations:
       'companion',
       'sieve',
       'pith',
-      'parenchyma',
+      'parenchymal',
       'mesophyll',
-    ]
-
-    'endothelial': [
       'vascular',
       'xylem',
       'protoxylem',
@@ -73,9 +67,6 @@ cell_annotations:
       'phloem',
       'protophloem',
       'metaphloem',
-    ]
-    
-    'other': [
       'inflorescence',
       'spikelet',
       'base',
@@ -89,8 +80,5 @@ cell_annotations:
     ]
 
   supertype_order: [
-    'epithelial',
-    'endothelial',
-    'mesenchymal',
     'other',
   ]

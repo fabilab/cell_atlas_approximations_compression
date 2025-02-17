@@ -19,8 +19,8 @@ gene_expression:
         'sieve ii': 'sieve'
         'mesophyll i': 'mesophyll'
         'mesophyll ii': 'mesophyll'
-        'parenchyma i': 'parenchyma'
-        'parenchyma ii': 'parenchyma'
+        'parenchyma i': 'parenchymal'
+        'parenchyma ii': 'parenchymal'
     blacklist:
       whole: [
         "not_clustered",
@@ -28,18 +28,12 @@ gene_expression:
 
 cell_annotations:
   cell_supertypes:
-    'epithelial': [
+    'other': [
       'epidermis',
       'palisade',
       'sieve',
-    ]
-
-    'mesenchymal': [
       'mesophyll',
-      'parenchyma',
-    ]
-    
-    'other': [
+      'parenchymal',
       'root',
       'meristem',
       'root transition',
@@ -47,7 +41,5 @@ cell_annotations:
     ]
 
   supertype_order: [
-    'epithelial',
-    'mesenchymal',
     'other',
   ]

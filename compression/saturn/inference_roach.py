@@ -11,7 +11,7 @@ import subprocess as sp
 import argparse
 
 
-leaveout_list = [
+training_species_list = [
     "a_queenslandica",
     "a_thaliana",
     "c_elegans",
@@ -38,7 +38,25 @@ leaveout_list = [
     "x_laevis",
     "z_mays",
 ]
-leaveout_dict = {key: i + 1 for i, key in enumerate(leaveout_list)}
+training_species_dict = {key: i + 1 for i, key in enumerate(training_species_list)}
+
+termite_dict = {
+    # Perfect genome matches
+    "dmel": ["d_melanogaster.h5ad", "d_melanogaster_gene_all_esm1b.pt"],
+    "znev": ["znev.h5ad", "Znev_gene_all_esm1b.pt"],
+    "ofor": ["ofor.h5ad", "Ofor_gene_all_esm1b.pt"],
+    "mdar": ["mdar.h5ad", "Mdar_gene_all_esm1b.pt"],
+    "hsjo": ["hsjo.h5ad", "Hsjo_gene_all_esm1b.pt"],
+    "gfus": ["gfus.h5ad", "Gfus_gene_all_esm1b.pt"],
+    # Imperfect genome matches
+    "imin": ["imin.h5ad", "Isch_gene_all_esm1b.pt"],
+    "cfor": ["cfor.h5ad", "Cges_gene_all_esm1b.pt"],
+    "nsug": ["nsug.h5ad", "Ncas_gene_all_esm1b.pt"],
+    "pnit": ["pnit.h5ad", "Punk_gene_all_esm1b.pt"],
+    "cpun": ["cpun.h5ad", "Cmer_gene_all_esm1b.pt"],
+    "roki": ["roki.h5ad", "Rfla_gene_all_esm1b.pt"],
+    "rspe": ["rspe.h5ad", "Rfla_gene_all_esm1b.pt"],
+}
 
 
 if __name__ == "__main__":
@@ -63,16 +81,11 @@ if __name__ == "__main__":
         "--species",
         type=str,
         help="Infer embedding for data of this species",
-        default=None,
+        choices=list(termite_dict.keys()),
+        default="cpun",
     )
     parser.add_argument(
         "--train", action="store_true", help="Whether to train the transfer model"
-    )
-    parser.add_argument(
-        "--leaveout",
-        type=str,
-        default=None,
-        help="Use leaveout-traned model without this species for inference.",
     )
     parser.add_argument(
         "--secondary-analysis", action="store_true", help="Perform secondary analysis"
@@ -92,12 +105,12 @@ if __name__ == "__main__":
         "--n-finetune-epochs", default=10, help="Number of epochs in finetuning"
     )
     parser.add_argument(
-        "--guide-species", type=str, default=None, help="Guide species for inference"
+        "--guide-species",
+        type=str,
+        default="d_melanogaster",
+        help="Guide species for inference",
     )
     args = parser.parse_args()
-
-    if args.leaveout is not None and args.species is None:
-        args.species = args.leaveout
 
     fasta_root_folder = pathlib.Path(
         "/mnt/data/projects/cell_atlas_approximations/reference_atlases/data/saturn/peptide_sequences/"
@@ -109,11 +122,6 @@ if __name__ == "__main__":
         embeddings_summary_fdn.parent
         / f"output_nmacro{args.n_macrogenes}_nhvg{args.n_hvg}_epochs_p{args.n_pretrain_epochs}_m{args.n_epochs}"
     )
-    if args.leaveout is not None:
-        training_output_fdn = (
-            training_output_fdn.parent
-            / f"{training_output_fdn.stem}_leaveout_{args.leaveout}"
-        )
     # There is a "from_kdm" folder that contains the big models, just to make sure I don't delete them by mistake
     if not training_output_fdn.exists():
         training_output_fdn = (
@@ -121,33 +129,32 @@ if __name__ == "__main__":
             / "from_kdm"
             / f"output_nmacro{args.n_macrogenes}_nhvg{args.n_hvg}_epochs_p{args.n_pretrain_epochs}_m{args.n_epochs}"
         )
-        if args.leaveout is not None:
-            leaveout_n = leaveout_dict[args.leaveout]
-            training_output_fdn = (
-                training_output_fdn.parent
-                / f"{training_output_fdn.stem}_leaveout_{leaveout_n}"
-            )
     centroids_fn = (
         training_output_fdn / "centroids.pkl"
     )  # This is temp output to speed up later iterations (kmeans is costly, apparently)
     pretrain_model_fn = training_output_fdn / "pretrain_model.model"
     metric_model_fn = training_output_fdn / "metric_model.model"
-    output_fdn = training_output_fdn / "inference_output"
     training_csv_fn = training_output_fdn / "in_csv.csv"
     trained_adata_path = training_output_fdn / "saturn_results" / "final_adata.h5ad"
+    for fn in [pretrain_model_fn, metric_model_fn, training_csv_fn, trained_adata_path]:
+        if not fn.exists():
+            raise IOError(f"Missing training file: {fn}")
+
+    termite_embeddings_summary_fdn = pathlib.Path(
+        "/mnt/data/projects/termites/data/sc_termite_data/saturn_data/esm_embeddings_summaries/"
+    )
+    termite_h5ad_fdn = pathlib.Path(
+        "/mnt/data/projects/termites/data/sc_termite_data/saturn_data/h5ad_by_species"
+    )
+
+    output_fdn = training_output_fdn / f"inference_output_{args.species}"
+    os.makedirs(output_fdn, exist_ok=True)
 
     # Build the CSV used by SATURN to connect the species
-    for h5ad_fn in h5ad_fdn.iterdir():
-        species = h5ad_fn.stem
-        if species != args.species:
-            continue
-        print(species)
-        embedding_summary_fn = embeddings_summary_fdn / f"{species}_gene_all_esm1b.pt"
-        if not embedding_summary_fn.exists():
-            print(" Embedding summary file not found, skipping")
-            continue
-        break
-    else:
+    species = args.species
+    h5ad_fn = termite_h5ad_fdn / termite_dict[species][0]
+    embedding_summary_fn = termite_embeddings_summary_fdn / termite_dict[species][1]
+    if (not h5ad_fn.exists()) or (not embedding_summary_fn.exists()):
         raise IOError("adata or embedding summary files not found")
 
     # Sanity check: verify all features used in the h5ad var_names have a corresponding embedding
@@ -213,27 +220,39 @@ if __name__ == "__main__":
 
     print(" ".join(call))
     if not args.dry:
+        import time
+
+        t0 = time.time()
         sp.run(" ".join(call), shell=True, check=True)
+        t1 = time.time()
+        dt = t1 - t0
+        print(f"Runtime for inference: {dt:.1f} seconds.")
+
+        print("Add runtime info to h5ad")
+        import anndata
+
+        for result_h5ad in output_fdn.iterdir():
+            if args.species not in result_h5ad.stem:
+                continue
+            if f"guide_{args.guide_species}" not in result_h5ad.stem:
+                continue
+            if args.train and str(result_h5ad).endswith("finetuned.h5ad"):
+                break
+            elif (not args.train) and str(result_h5ad).endswith("zeroshot.h5ad"):
+                break
+        else:
+            raise IOError("Inference output h5ad file not found")
+
+        adata_inf = anndata.read_h5ad(result_h5ad)
+        adata_inf.uns["runtime [seconds]"] = dt
+        adata_inf.write(result_h5ad)
 
         if args.secondary_analysis:
             print("Begin secondary analysis")
             import numpy as np
-            import anndata
             import scanpy as sc
             import matplotlib.pyplot as plt
             import seaborn as sns
-
-            for result_h5ad in output_fdn.iterdir():
-                if args.species not in result_h5ad.stem:
-                    continue
-                if f"guide_{args.guide_species}" not in result_h5ad.stem:
-                    continue
-                if args.train and str(result_h5ad).endswith("finetuned.h5ad"):
-                    break
-                elif (not args.train) and str(result_h5ad).endswith("zeroshot.h5ad"):
-                    break
-            else:
-                raise IOError("Inference output h5ad file not found")
 
             print("Load h5ad for inference and training")
             adata_inf = anndata.read_h5ad(result_h5ad)
@@ -274,7 +293,8 @@ if __name__ == "__main__":
             plt.ion()
             plt.close("all")
 
-            fig3, axs = plt.subplots(1, 3, figsize=(16, 5), sharex=True, sharey=True)
+            fig3, axs = plt.subplots(2, 3, figsize=(16.5, 11), sharex=True, sharey=True)
+            axs = axs.ravel()
             sc.pl.umap(
                 adata,
                 color="species",
@@ -285,7 +305,13 @@ if __name__ == "__main__":
             )
             axs[0].legend(ncol=1, fontsize=6, loc="best")
             for i, species in enumerate(
-                [adata_inf.uns["guide_species"], f"{args.species}-inf"]
+                [
+                    adata_inf.uns["guide_species"],
+                    adata_inf.uns["guide_species"],
+                    adata_inf.uns["guide_species"],
+                    adata_inf.uns["guide_species"],
+                    f"{args.species}-inf",
+                ]
             ):
                 ax = axs[i + 1]
                 adata.obs["cell_type_tmp"] = adata.obs["cell_type"].astype(str)
@@ -294,9 +320,15 @@ if __name__ == "__main__":
                 )
                 cell_types = list(sorted(adata.obs["cell_type_tmp"].unique()))
                 cell_types.remove("other species")
+                if species in termite_dict:
+                    cell_types = sorted(cell_types, key=int)
                 colors = sns.color_palette("husl", n_colors=len(cell_types))
                 palette = dict(zip(cell_types, colors))
                 palette["other species"] = (0.5, 0.5, 0.5)
+                if i < 4:
+                    groups = cell_types[i::4] + ["other_species"]
+                else:
+                    groups = cell_types
                 sc.pl.umap(
                     adata,
                     color="cell_type_tmp",
@@ -305,6 +337,8 @@ if __name__ == "__main__":
                     size=15,
                     palette=palette,
                     ax=ax,
+                    groups=groups,
+                    na_color=palette["other species"],
                 )
                 ax.legend(ncol=2, fontsize=6, loc="best")
             for ax in axs:
@@ -346,9 +380,13 @@ if __name__ == "__main__":
                     f"{adata_inf.obs['ref_labels'].values[i_inf]} -> {adata_train.obs['ref_labels'].values[i_train]}"
                 )
 
-            print("By cell type")
+            print("By cell type, not in UMAP space")
             from collections import Counter
 
+            cdis = torch.cdist(
+                torch.tensor(adata_inf.X).to("cuda"),
+                torch.tensor(adata_train.X).to("cuda"),
+            )
             closest = cdis.min(axis=1)
             close_dic = Counter()
             for i_inf, i_train in enumerate(closest.indices.cpu().numpy()):

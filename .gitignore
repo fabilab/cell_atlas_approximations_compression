@@ -17,6 +17,9 @@
 # Data folder (TODO: be more specific)
 data
 
+# Figures folder
+figures
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

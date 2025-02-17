@@ -11,10 +11,10 @@ gene_expression:
     rename_dict:
       cell_types:
         'adaxial epidermis': 'epidermal'
-        'xylem parenchyma': 'parenchyma'
+        'xylem parenchyma': 'xylem'
         'abaxial epidermis': 'epidermal'
         'meristematic cell': 'meristem'
-        'hydathodes': 'epithem'
+        'hydathodes': 'hydathodes'
 
     blacklist:
       leaf: [
@@ -23,29 +23,17 @@ gene_expression:
 
 cell_annotations:
   cell_supertypes:
-    'epithelial': [
-      'epidermal',
-      'epithem',
-    ]
-
-    'mesenchymal': [
-      'mesophyll',
-      'parenchyma',
-    ]
-
-    'endothelial': [
-      'xylem',
-      'phloem',
-    ]
-    
     'other': [
       'cortex',
+      'epidermal',
+      'epithem',
+      'mesophyll',
+      'xylem',
+      'phloem',
       'meristem',
+      'hydathodes',
     ]
 
   supertype_order: [
-    'epithelial',
-    'endothelial',
-    'mesenchymal',
     'other',
   ]

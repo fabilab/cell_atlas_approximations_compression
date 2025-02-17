@@ -8,7 +8,9 @@ import os
 import sys
 import argparse
 import gc
+import pickle
 import pathlib
+from collections import Counter
 import gzip
 import h5py
 import numpy as np
@@ -39,7 +41,12 @@ if __name__ == "__main__":
     pa = argparse.ArgumentParser()
     pa.add_argument("--species", type=str, default="")
     pa.add_argument("--maxtissues", type=int, default=1000)
+    pa.add_argument(
+        "--count-only", action="store_true", help="Only count cells and cell types"
+    )
     args = pa.parse_args()
+
+    count_stats = {}
 
     if args.species:
         species_list = args.species.split(",")
@@ -63,7 +70,7 @@ if __name__ == "__main__":
             "s_mansoni",
             "s_mediterranea",
             "s_lacustris",
-            's_purpuratus',
+            "s_purpuratus",
             "t_adhaerens",
             "l_minuta",
             "a_thaliana",
@@ -72,30 +79,40 @@ if __name__ == "__main__":
             "f_vesca",
             "o_sativa",
             # Multi-organ species
-            'h_sapiens',
-            'm_musculus',
-            'm_murinus',
-            'd_melanogaster',
-            'x_laevis',
+            "h_sapiens",
+            "m_musculus",
+            "m_murinus",
+            "d_melanogaster",
+            "x_laevis",
         ]
 
-    for species in species_list:
+    for ispe, species in enumerate(species_list):
         print("--------------------------------")
-        print(species)
+        print(f"{ispe + 1}. {species}")
         print("--------------------------------")
+
+        count_stats[species] = {
+            "ncells": 0,
+            # "celltypes": set(),
+            "celltypes_original": set(),
+            "organs": set(),
+            "ngenes": 0,
+        }
 
         config = load_config(species)
-        fn_out = output_folder / f"{species}.h5"
 
-        # Remove existing compressed atlas file if present, but only do it at the end
-        remove_old = os.path.isfile(fn_out)
-        if remove_old:
-            fn_out_final = fn_out
-            fn_out = pathlib.Path(str(fn_out_final) + ".new")
-            if fn_out.exists():
-                os.remove(fn_out)
-        else:
-            fn_out_final = None
+        if not args.count_only:
+            fn_out = output_folder / f"{species}.h5"
+
+            # Remove existing compressed atlas file if present, but only do it at the end
+            remove_old = os.path.isfile(fn_out)
+            if remove_old:
+                fn_out_final = fn_out
+                fn_out = pathlib.Path(str(fn_out_final) + ".new")
+                if fn_out.exists():
+                    os.remove(fn_out)
+            else:
+                fn_out_final = None
 
         # Iterate over gene expression, chromatin accessibility, etc.
         for measurement_type in config["measurement_types"]:
@@ -190,6 +207,7 @@ if __name__ == "__main__":
             # Iterate over tissues
             for itissue, tissue in enumerate(tissues):
                 print(tissue)
+                count_stats[species]["organs"].add(tissue)
 
                 if "path_metadata_global" in config_mt:
                     meta_tissue = meta.loc[meta["tissue"] == tissue]
@@ -218,6 +236,8 @@ if __name__ == "__main__":
                     print("Postprocess feature names")
                     adata_tissue = postprocess_feature_names(adata_tissue, config_mt)
 
+                    count_stats[species]["ncells"] += adata_tissue.n_obs
+
                     print("Filter cells")
                     adata_tissue = filter_cells(adata_tissue, config_mt)
 
@@ -228,31 +248,54 @@ if __name__ == "__main__":
                         measurement_type,
                     )
 
-                    print("Correct cell annotations")
-                    adata_tissue = correct_annotations(
-                        adata_tissue,
-                        config_mt["cell_annotations"]["column"],
-                        species,
-                        tissue,
-                        config_mt["cell_annotations"]["rename_dict"],
-                        config_mt["cell_annotations"]["require_subannotation"],
-                        blacklist=config_mt["cell_annotations"]["blacklist"],
-                        tissue_restricted=config_mt["cell_annotations"]["tissue_restricted"],
-                        subannotation_kwargs=config_mt["cell_annotations"][
-                            "subannotation_kwargs"
-                        ],
+                    original_annotation_column = config_mt["cell_annotations"]["column"]
+                    adata_tissue.obs["cellTypeOriginal"] = pd.Categorical(
+                        adata_tissue.obs[original_annotation_column]
+                    )
+                    count_stats[species]["celltypes_original"] |= set(
+                        adata_tissue.obs["cellTypeOriginal"].cat.categories
                     )
 
-                    print("Store curated version of full atlas, for comparison")
-                    adata_tissue.write(
-                        curated_atlas_folder / f"{species}_{tissue}_{measurement_type}.h5ad",
-                    )
+                    if (count_stats[species]["ngenes"] == 0) and (
+                        measurement_type == "gene_expression"
+                    ):
+                        count_stats[species]["ngenes"] = adata_tissue.n_vars
 
-                    print("Compress atlas")
-                    compressed_atlas["tissues"][tissue] = compress_tissue(
-                        adata_tissue,
-                        celltype_order,
-                    )
+                    if not args.count_only:
+
+                        print("Correct cell annotations")
+                        adata_tissue = correct_annotations(
+                            adata_tissue,
+                            original_annotation_column,
+                            species,
+                            tissue,
+                            config_mt["cell_annotations"]["rename_dict"],
+                            config_mt["cell_annotations"]["require_subannotation"],
+                            blacklist=config_mt["cell_annotations"]["blacklist"],
+                            tissue_restricted=config_mt["cell_annotations"][
+                                "tissue_restricted"
+                            ],
+                            subannotation_kwargs=config_mt["cell_annotations"][
+                                "subannotation_kwargs"
+                            ],
+                        )
+
+                        # FIXME: there is a weird  segfault with subannotations
+                        # count_stats[species]["celltypes"] |= set(
+                        #    adata_tissue.obs["cellType"].values
+                        # )
+
+                        print("Store curated version of full atlas, for comparison")
+                        adata_tissue.write(
+                            curated_atlas_folder
+                            / f"{species}_{tissue}_{measurement_type}.h5ad",
+                        )
+
+                        print("Compress atlas")
+                        compressed_atlas["tissues"][tissue] = compress_tissue(
+                            adata_tissue,
+                            celltype_order,
+                        )
 
                 finally:
                     print("Garbage collect at the end of tissue")
@@ -267,6 +310,9 @@ if __name__ == "__main__":
 
             print("Garbage collection after tissue loop")
             gc.collect()
+
+            if args.count_only:
+                continue
 
             print("Homogenise feature list across organs if needed")
             homogenise_features(compressed_atlas)
@@ -334,7 +380,16 @@ if __name__ == "__main__":
                 os.remove(fn_out)
                 raise
 
-        if remove_old:
-            print("Delete old file and rename new file to final filename")
-            os.remove(fn_out_final)
-            os.rename(fn_out, fn_out_final)
+        if not args.count_only:
+            if remove_old:
+                print("Delete old file and rename new file to final filename")
+                os.remove(fn_out_final)
+                os.rename(fn_out, fn_out_final)
+
+        else:
+            print("Store count statistics")
+            with open(
+                f"/home/fabio/papers/atlasapprox/figures/stats/count_stats_{species}.pkl",
+                "wb",
+            ) as f:
+                pickle.dump(count_stats[species], f)

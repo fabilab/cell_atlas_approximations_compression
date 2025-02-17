@@ -114,7 +114,7 @@ cell_annotations:
       'male accessory gland main cell': 'main'
       'ejaculatory bulb': 'bulb'
       'ejaculatory bulb epithelium': 'epithelial'
-      'anterior ejaculatory duct': 'ductal'
+      'anterior ejaculatory duct': 'ejaculatory'
       'male reproductive tract muscle': 'muscle'
       'seminal vesicle': 'seminal'
       'secretory cell of the male reproductive tract': 'secretory'
@@ -301,7 +301,7 @@ cell_annotations:
       'bar-shaped',
       'crop',
       'copper',
-      'ductal',
+      'ejaculatory',
       'oviduct',
       'enterocyte',
       'enteroblast',
